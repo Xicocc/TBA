@@ -26,7 +26,7 @@ class DeleteJobForm:
 
         for idx, (field, value) in enumerate(self.job.items()):
             tk.Label(details_frame, text=field, width=25, anchor='w', font=('Arial', 17)).grid(row=idx, column=0, sticky='w', pady=5)
-            tk.Label(details_frame, text=value, width=50, anchor='w', bg='#1e1e1e', borderwidth=1, font=('Arial', 15)).grid(row=idx, column=1, sticky='ew', padx=5)
+            tk.Label(details_frame, text=value, width=50, anchor='w', fg='white',bg='#1e1e1e', borderwidth=1, font=('Arial', 15)).grid(row=idx, column=1, sticky='ew', padx=5)
 
         # Buttons
         button_frame = tk.Frame(frame)
