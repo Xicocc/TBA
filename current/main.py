@@ -305,10 +305,8 @@ class JobDisplayApp:
             # Convert 'DATA ENTREGA' to datetime format using the specified format
             df['DATA ENTREGA'] = pd.to_datetime(df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
 
-            # Replace NaT with '-'
-            df['DATA ENTREGA'] = df['DATA ENTREGA'].fillna('-').astype(str)
-
-
+            # Replace NaT with '-' and keep valid dates in their original format
+            df['DATA ENTREGA'] = df['DATA ENTREGA'].apply(lambda x: x.strftime('%d/%m/%Y_%H:%M') if pd.notna(x) else '-')
 
             # Update the jobs_df with the new data
             self.jobs_df = df
@@ -327,6 +325,7 @@ class JobDisplayApp:
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load jobs: {e}")
             self.root.focus_force()
+
 
     def filter_by_date(self, df, query):
         # The `query` should be in the form of 'day:DD', 'month:MM', or 'year:YYYY'.
