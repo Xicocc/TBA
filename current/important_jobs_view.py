@@ -58,13 +58,32 @@ class ImportantJobsWindow:
             # Ensure the view starts focused on the first entry
             self.window.after(100, self.scroll_to_center)  # Schedule scrolling after a short delay
 
-            # Request focus and bring the window to the front
-            self.window.focus_set()
-            self.window.lift()
+            # Ensure the window is focused and brought to the top
+            self.window.after(200, self.focus_and_raise)  # Schedule focus and raise after a short delay
 
             self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         except Exception as e:
             messagebox.showerror("Error", f"Error initializing Important Jobs window: {e}")
+
+    def focus_and_raise(self):
+        try:
+            self.window.focus_set()  # Request focus
+            self.window.lift()  # Bring to the front
+            self.window.attributes('-topmost', True)  # Set as topmost window
+            self.window.attributes('-topmost', False)  # Reset topmost attribute
+            
+            # Forcing the window to stay on top for a brief moment
+            self.window.update_idletasks()
+            self.window.after(100, lambda: self.window.attributes('-topmost', True))
+            self.window.after(200, lambda: self.window.attributes('-topmost', False))
+
+            # Ensure the window is not minimized
+            self.window.deiconify()
+        except Exception as e:
+            messagebox.showerror("Error", f"Error focusing and raising window: {e}")
+
+    # Other methods remain unchanged
+
 
 
     def on_frame_configure(self, event=None):
