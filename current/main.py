@@ -326,7 +326,6 @@ class JobDisplayApp:
             messagebox.showerror("Error", f"Failed to load jobs: {e}")
             self.root.focus_force()
 
-
     def filter_by_date(self, df, query):
         # The `query` should be in the form of 'day:DD', 'month:MM', or 'year:YYYY'.
         def match_date(date, query):

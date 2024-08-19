@@ -82,10 +82,6 @@ class ImportantJobsWindow:
         except Exception as e:
             messagebox.showerror("Error", f"Error focusing and raising window: {e}")
 
-    # Other methods remain unchanged
-
-
-
     def on_frame_configure(self, event=None):
         try:
             # Update the scroll region to match the frame's size
