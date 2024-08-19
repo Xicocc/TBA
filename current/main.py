@@ -303,7 +303,9 @@ class JobDisplayApp:
                 df = df.loc[:last_valid_index]
 
             # Convert 'DATA ENTREGA' to string and handle NaN values
-            df['DATA ENTREGA'] = df['DATA ENTREGA'].astype(str).replace("nan", "-")
+            df['DATA ENTREGA'] = df['DATA ENTREGA'].astype(str)
+            df['DATA ENTREGA'].replace('NaT', '-', inplace=True)
+            df['DATA ENTREGA'].replace('nan', '-', inplace=True)
 
             # Update the jobs_df with the new data
             self.jobs_df = df
