@@ -19,9 +19,6 @@ class ImportantJobsWindow:
             self.window.update_idletasks()  # Ensure the window is fully created
             self.window.state('zoomed')  # Maximize the window
 
-            # Focus on the new window
-            self.window.focus_set()
-
             # Create a canvas to enable scrolling
             self.canvas = tk.Canvas(self.window)
             self.canvas.pack(side='left', fill='both', expand=True)
@@ -61,10 +58,14 @@ class ImportantJobsWindow:
             # Ensure the view starts focused on the first entry
             self.window.after(100, self.scroll_to_center)  # Schedule scrolling after a short delay
 
-            # Bind the window close event
+            # Request focus and bring the window to the front
+            self.window.focus_set()
+            self.window.lift()
+
             self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         except Exception as e:
             messagebox.showerror("Error", f"Error initializing Important Jobs window: {e}")
+
 
     def on_frame_configure(self, event=None):
         try:
