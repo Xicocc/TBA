@@ -302,10 +302,13 @@ class JobDisplayApp:
             if pd.notna(last_valid_index):
                 df = df.loc[:last_valid_index]
 
-            # Convert 'DATA ENTREGA' to string and handle NaN values
-            df['DATA ENTREGA'] = df['DATA ENTREGA'].astype(str)
-            df['DATA ENTREGA'].replace('NaT', '-', inplace=True)
-            df['DATA ENTREGA'].replace('nan', '-', inplace=True)
+            # Convert 'DATA ENTREGA' to datetime format using the specified format
+            df['DATA ENTREGA'] = pd.to_datetime(df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
+
+            # Replace NaT with '-'
+            df['DATA ENTREGA'] = df['DATA ENTREGA'].fillna('-').astype(str)
+
+
 
             # Update the jobs_df with the new data
             self.jobs_df = df
