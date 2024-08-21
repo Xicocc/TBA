@@ -252,7 +252,6 @@ class ImportantJobsWindow:
         except Exception as e:
             messagebox.showerror("Error", f"Error updating display: {e}")
 
-
     def get_text_width(self, text, font_name, font_size):
         """
         Measure the width of the text in pixels for a given font and size.
