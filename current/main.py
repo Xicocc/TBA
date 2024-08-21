@@ -1,3 +1,4 @@
+import json
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import pandas as pd
@@ -25,6 +26,7 @@ class JobDisplayApp:
         self.file_path = ""
         self.selected_job_index = None
         self.editing_added_job = False
+        self.tree_index_map = {}
 
         # Create a frame to hold the initial buttons
         self.initial_button_frame = tk.Frame(root)
@@ -85,87 +87,104 @@ class JobDisplayApp:
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def load_state(self):
-        data = json_operations.load_json_file()
-        if data:
-            if isinstance(data, dict):
-                # Load jobs_df
-                if 'jobs_df' in data:
-                    self.jobs_df = pd.DataFrame(data['jobs_df'])
+        """Load the saved state from a file."""
+        try:
+            data = json_operations.load_json_file()
+            if data:
+                if isinstance(data, dict):
+                    # Load jobs_df
+                    if 'jobs_df' in data:
+                        self.jobs_df = pd.DataFrame(data['jobs_df'])
+                    else:
+                        messagebox.showerror('Error', 'Missing jobs_df data')
+                        self.root.focus_force()
+                        return
+
+                    # Load added_jobs_df
+                    if 'added_jobs_df' in data:
+                        self.added_jobs_df = pd.DataFrame(data['added_jobs_df'])
+                        if self.added_jobs_df.empty:
+                            # Reinitialize with the correct columns if loaded DataFrame is empty
+                            self.added_jobs_df = pd.DataFrame(columns=['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGENCIA', 'DATA ENTREGA'])
+                    else:
+                        messagebox.showerror('Error', 'Missing added_jobs_df data')
+                        self.root.focus_force()
+                        return
+
+                    # Standardize column names
+                    self.jobs_df.columns = self.jobs_df.columns.str.replace('URGÊNCIA / OBSERVAÇÕES', 'URGÊNCIA / OBS.', regex=False)
+                    self.added_jobs_df.columns = self.added_jobs_df.columns.str.replace('URGÊNCIA / OBSERVAÇÕES', 'URGÊNCIA / OBS.', regex=False)
+
+                    # Set up Treeview columns
+                    self.tree['columns'] = list(self.jobs_df.columns)
+                    for col in self.tree['columns']:
+                        self.tree.heading(col, text=col)
+                        self.tree.column(col, anchor="w")
+
+                    self.refresh_view()
+                    messagebox.showinfo('Success', 'Data restored successfully')
+                    self.root.focus_force()
+                    self.is_loaded_data = True
+                    self.enable_buttons()
+                    self.initial_button_frame.pack_forget()
                 else:
-                    messagebox.showerror('Error', 'Missing jobs_df data')
-                    self.root.focus_force()  # Re-focus on the main window
-                    return
-
-                # Load added_jobs_df
-                if 'added_jobs_df' in data:
-                    self.added_jobs_df = pd.DataFrame(data['added_jobs_df'])
-                    if self.added_jobs_df.empty:
-                        # Reinitialize with the correct columns if loaded DataFrame is empty
-                        self.added_jobs_df = pd.DataFrame(columns=['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGENCIA', 'DATA ENTREGA'])
-                else:
-                    messagebox.showerror('Error', 'Missing added_jobs_df data')
-                    self.root.focus_force()  # Re-focus on the main window
-                    return
-
-                # Standardize column names
-                self.jobs_df.columns = self.jobs_df.columns.str.replace('URGÊNCIA / OBSERVAÇÕES', 'URGÊNCIA / OBS.', regex=False)
-                self.added_jobs_df.columns = self.added_jobs_df.columns.str.replace('URGÊNCIA / OBSERVAÇÕES', 'URGÊNCIA / OBS.', regex=False)
-
-                # Set up Treeview columns
-                self.tree['columns'] = list(self.jobs_df.columns)
-                for col in self.tree['columns']:
-                    self.tree.heading(col, text=col)
-                    self.tree.column(col, anchor="w")
-
-                self.refresh_view()
-                messagebox.showinfo('Success', 'Data restored successfully')
-                self.root.focus_force()  # Re-focus on the main window
-                self.is_loaded_data = True
-                self.enable_buttons()
-                self.initial_button_frame.pack_forget()
+                    messagebox.showerror('Error', 'Expected a dictionary with data keys')
+                    self.root.focus_force()
             else:
-                messagebox.showerror('Error', 'Expected a dictionary with data keys')
-                self.root.focus_force()  # Re-focus on the main window
-        else:
-            messagebox.showerror('Error', 'Failed to load data')
-            self.root.focus_force()  # Re-focus on the main window
+                messagebox.showerror('Error', 'Failed to load data')
+                self.root.focus_force()
+        except json.JSONDecodeError:
+            messagebox.showerror('Error', 'Error decoding data. The file may be corrupted.')
+            self.root.focus_force()
+        except pd.errors.EmptyDataError:
+            messagebox.showerror('Error', 'Data is empty or could not be processed.')
+            self.root.focus_force()
+        except KeyError as e:
+            messagebox.showerror('Error', f'Missing expected key: {e}')
+            self.root.focus_force()
+        except Exception as e:
+            messagebox.showerror('Error', f'Unexpected error: {e}')
+            self.root.focus_force()
 
     def on_close(self):
-        # Handle the window closing event
+        """Handle the window closing event."""
         try:
             if self.is_loaded_data:
-                # Prompt the user if they want to save the state
                 result = messagebox.askyesno("Save State", "Do you want to save the current state?")
-                self.root.focus_force()  # Re-focus on the main window
+                self.root.focus_force()
 
                 if result:
                     state = {
-                    'added_jobs_df': self.added_jobs_df.to_dict(orient='records'),
-                    'jobs_df': self.jobs_df.to_dict(orient='records')}
-                    # User wants to save the state
+                        'added_jobs_df': self.added_jobs_df.to_dict(orient='records'),
+                        'jobs_df': self.jobs_df.to_dict(orient='records')
+                    }
                     for job in state['added_jobs_df']:
                         if job['DATA ENTREGA'] == 'DD/MM/YYYY_HH:MM':
                             job['DATA ENTREGA'] = '-'
                     if json_operations.save_json_file(state):
-                        # Successfully saved state, now close the application
                         messagebox.showinfo("Info", "State saved successfully")
-                        self.root.focus_force()  # Re-focus on the main window
-                        self.root.destroy()
-                        self.root.quit()
                     else:
-                        # Failed to save the state, show error message
                         messagebox.showerror("Error", "Failed to save state. The application will not close.")
-                        self.root.focus_force()  # Re-focus on the main window
-                else:
-                    # User chose not to save, just close the application
-                    self.root.destroy()
-                    self.root.quit()
+                        self.root.focus_force()
+                        return
+                self.root.destroy()
+                self.root.quit()
             else:
                 self.root.destroy()
                 self.root.quit()
+        except IOError as e:
+            messagebox.showerror("Error", f"File I/O error: {e}")
+            self.root.focus_force()
+            self.root.destroy()
+            self.root.quit()
+        except json.JSONDecodeError:
+            messagebox.showerror("Error", "Data encoding issues prevented state saving.")
+            self.root.focus_force()
+            self.root.destroy()
+            self.root.quit()
         except Exception as e:
-            messagebox.showerror("Error", f"An unexpected error occurred: {e}")
-            self.root.focus_force()  # Re-focus on the main window
+            messagebox.showerror("Error", f"Unexpected error: {e}")
+            self.root.focus_force()
             self.root.destroy()
             self.root.quit()
 
@@ -239,36 +258,54 @@ class JobDisplayApp:
                 filetypes=(("Excel files", "*.xlsx *.xls"), ("All files", "*.*"))
             )
 
-            if self.file_path:
-                self.is_loaded_data = True
-                self.enable_buttons()
-                self.initial_button_frame.pack_forget()
-
-                # Initialize Treeview columns only after the file is loaded
-                self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
-                self.tree.heading('job_id', text='SACO')
-                self.tree.heading('client', text='CLIENTE')
-                self.tree.heading('description', text='DESCRI. DO TRABALHO')
-                self.tree.heading('quantity', text='QUANT.')
-                self.tree.heading('sector', text='SETOR')
-                self.tree.heading('state', text='ESTADO')
-                self.tree.heading('urgency', text='URGÊNCIA / OBS.')
-                self.tree.heading('delivery', text='DATA ENTREGA')
-
-                # Load the jobs from the file
-                self.load_jobs()
-                self.root.focus_force()
-
-            else:
+            if not self.file_path:
                 raise FileNotFoundError("No file selected. Please try again.")
+
+            self.is_loaded_data = True
+            self.enable_buttons()
+            self.initial_button_frame.pack_forget()
+
+            self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
+            self.tree.heading('job_id', text='SACO')
+            self.tree.heading('client', text='CLIENTE')
+            self.tree.heading('description', text='DESCRI. DO TRABALHO')
+            self.tree.heading('quantity', text='QUANT.')
+            self.tree.heading('sector', text='SETOR')
+            self.tree.heading('state', text='ESTADO')
+            self.tree.heading('urgency', text='URGÊNCIA / OBS.')
+            self.tree.heading('delivery', text='DATA ENTREGA')
+
+            self.load_jobs()
+            self.root.focus_force()
 
         except FileNotFoundError as fnf_error:
             messagebox.showerror("File Error", str(fnf_error))
-            self.root.focus_force()  # Re-focus on the main window
-
+            self.root.focus_force()
+        except pd.errors.EmptyDataError as empty_data_error:
+            messagebox.showerror("Data Error", f"File is empty or cannot be read. {empty_data_error}")
+            self.root.focus_force()
+        except ValueError as value_error:
+            messagebox.showerror("Value Error", f"Value error: {value_error}")
+            self.root.focus_force()
         except Exception as e:
-            messagebox.showerror("Error", f"An unexpected error occurred: {str(e)}")
-            self.root.focus_force()  # Re-focus on the main window
+            messagebox.showerror("Error", f"Unexpected error: {e}")
+            self.root.focus_force()
+
+    def parse_date(self, date_str, format='%d/%m/%Y_%H:%M'):
+        """Parse a date string to a datetime object and format it back to string.
+        
+        Args:
+            date_str (str): Date string to parse.
+            format (str): Format to parse and format the date string.
+            
+        Returns:
+            str: Formatted date string or '-' if date is invalid or empty.
+        """
+        try:
+            date_obj = pd.to_datetime(date_str, format=format, errors='coerce')
+            return date_obj.strftime(format) if pd.notna(date_obj) else '-'
+        except ValueError:
+            return '-'
 
     def load_jobs(self):
         try:
@@ -298,11 +335,8 @@ class JobDisplayApp:
             if pd.notna(last_valid_index):
                 df = df.loc[:last_valid_index]
 
-            # Convert 'DATA ENTREGA' to datetime format using the specified format
-            df['DATA ENTREGA'] = pd.to_datetime(df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
-
-            # Replace NaT with '-' and keep valid dates in their original format
-            df['DATA ENTREGA'] = df['DATA ENTREGA'].apply(lambda x: x.strftime('%d/%m/%Y_%H:%M') if pd.notna(x) else '-')
+            # Use the parse_date utility function to format 'DATA ENTREGA'
+            df['DATA ENTREGA'] = df['DATA ENTREGA'].apply(self.parse_date)
 
             # Update the jobs_df with the new data
             self.jobs_df = df
@@ -318,12 +352,18 @@ class JobDisplayApp:
         except pd.errors.EmptyDataError:
             messagebox.showerror("Data Error", "The selected file is empty or cannot be read. Please check the file.")
             self.root.focus_force()
+        except pd.errors.ParserError:
+            messagebox.showerror("Parse Error", "There was an error parsing the file. Please check the file format.")
+            self.root.focus_force()
+        except ValueError as value_error:
+            messagebox.showerror("Value Error", f"Value error occurred: {value_error}")
+            self.root.focus_force()
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load jobs: {e}")
             self.root.focus_force()
 
     def filter_by_date(self, df, query):
-        # The `query` should be in the form of 'day:DD', 'month:MM', or 'year:YYYY'.
+        """Filter DataFrame based on date components specified in the query."""
         def match_date(date, query):
             if pd.isna(date):
                 return False
@@ -342,21 +382,66 @@ class JobDisplayApp:
                 return False
             
             return False
-        
+
         # Convert 'DATA ENTREGA' to datetime
         df['DATA ENTREGA'] = pd.to_datetime(df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
 
         # Apply the date filter
-        return df[df['DATA ENTREGA'].apply(lambda date: match_date(date, query))]
+        filtered_df = df[df['DATA ENTREGA'].apply(lambda date: match_date(date, query))]
+
+        return filtered_df
+
+    def filter_data(self, df, query):
+        """Filter the DataFrame based on the search query."""
+        
+        # Initialize the filtered DataFrame
+        filtered_df = df.copy()
+
+        # Apply specific filters based on the query prefix
+        if query.startswith("day:") or query.startswith("month:") or query.startswith("year:"):
+            # Use the existing filter_by_date for date-based queries
+            filtered_df = self.filter_by_date(filtered_df, query)
+        else:
+            # Dictionary mapping query prefixes to column names
+            column_mapping = {
+                "saco:": "SACO",
+                "cliente:": "CLIENTE",
+                "desc:": "DESCRIÇÃO DO TRABALHO",
+                "quant:": "QUANT.",
+                "setor:": "SECTOR EM QUE ESTÁ",
+                "estado:": "ESTADO",
+                "urg:": "URGÊNCIA / OBS.",
+                "obs:": "URGÊNCIA / OBS."  # Handling 'obs:' as equivalent to 'urg:'
+            }
+
+            # Identify the column to filter based on the query prefix
+            column_to_filter = None
+            for prefix, column in column_mapping.items():
+                if query.startswith(prefix):
+                    column_to_filter = column
+                    search_value = query[len(prefix):].strip()
+                    break
+
+            if column_to_filter:
+                # Apply filter for specific column
+                filtered_df = filtered_df[filtered_df[column_to_filter].astype(str).str.contains(search_value, case=False, na=False)]
+            else:
+                # Apply general search filter
+                def match_query(row):
+                    for column in filtered_df.columns:
+                        if str(row[column]).lower().find(query.lower()) != -1:
+                            return True
+                    return False
+                filtered_df = filtered_df[filtered_df.apply(match_query, axis=1)]
+
+        return filtered_df
 
     def refresh_view(self, *args):
+        """Refresh the view based on the current data and search query."""
         try:
             search_query = self.search_var.get().strip()
-            
-            # Clear existing items
-            for item in self.tree.get_children():
-                self.tree.delete(item)
 
+            # Generate new data
             frames_to_concat = []
             if not self.jobs_df.empty:
                 frames_to_concat.append(self.jobs_df)
@@ -366,40 +451,53 @@ class JobDisplayApp:
             if frames_to_concat:
                 combined_df = pd.concat(frames_to_concat, ignore_index=True)
 
-                # Apply date-based filtering if the query specifies a date component
-                if any(search_query.startswith(prefix) for prefix in ["day:", "month:", "year:"]):
-                    filtered_df = self.filter_by_date(combined_df, search_query)
-                else:
-                    # Convert 'DATA ENTREGA' to datetime and handle errors
-                    combined_df['DATA ENTREGA'] = pd.to_datetime(combined_df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
-                    
-                    # General search (for other fields, if needed)
-                    def match_query(row):
-                        for column in combined_df.columns:
-                            if str(row[column]).lower().find(search_query.lower()) != -1:
-                                return True
-                        return False
+                # Apply filtering
+                filtered_df = self.filter_data(combined_df, search_query)
 
-                    filtered_df = combined_df[combined_df.apply(match_query, axis=1)]
+                # Convert 'DATA ENTREGA' to datetime format for sorting
+                filtered_df['DATA ENTREGA'] = pd.to_datetime(filtered_df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
 
-                # Sort by 'DATA ENTREGA'
-                filtered_df = filtered_df.sort_values(by='DATA ENTREGA', ascending=True)
+                # Sort by 'DATA ENTREGA' if the column exists
+                if 'DATA ENTREGA' in filtered_df.columns:
+                    filtered_df = filtered_df.sort_values(by='DATA ENTREGA', ascending=True)
+
+                # Replace NaT with '-'
+                filtered_df['DATA ENTREGA'] = filtered_df['DATA ENTREGA'].apply(lambda x: x.strftime('%d/%m/%Y_%H:%M') if pd.notna(x) else '-')
 
                 # Replace NaN or empty string with "-"
                 filtered_df = filtered_df.replace({pd.NA: "-", pd.NaT: "-"})
 
                 # Store the mapping of Treeview indices to DataFrame indices
-                self.tree_index_map = {}
+                new_tree_index_map = {}
                 for idx, row in filtered_df.iterrows():
                     row_list = row.tolist()
                     tree_item = self.tree.insert('', 'end', values=row_list)
-                    self.tree_index_map[tree_item] = idx
+                    new_tree_index_map[tree_item] = idx
+
+                # Remove old items
+                old_items = set(self.tree_index_map.keys()) - set(new_tree_index_map.keys())
+                for item in old_items:
+                    self.tree.delete(item)
+
+                # Update existing items
+                for item, idx in new_tree_index_map.items():
+                    if item not in self.tree_index_map:
+                        continue
+                    self.tree.item(item, values=filtered_df.loc[idx].tolist())
+
+                # Update Treeview index map
+                self.tree_index_map = new_tree_index_map
 
                 # Adjust column widths based on content length
                 self.adjust_column_widths()
+
                 get_important_jobs_data(self.jobs_df, self.added_jobs_df)
                 refresh_all_windows()
 
+        except pd.errors.EmptyDataError:
+            messagebox.showerror("Error", "No data available to refresh the view.")
+        except AttributeError as e:
+            messagebox.showerror("Error", f"Attribute error: {e}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to refresh view: {e}. Please try closing and reopening the app :)")
 
