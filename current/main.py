@@ -40,15 +40,12 @@ class JobDisplayApp:
 
         # Create button frame and buttons
         self.button_frame = tk.Frame(root)
-        self.refresh_button = tk.Button(self.button_frame, text="Refresh Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE,command=self.refresh_view, state=tk.DISABLED)
         self.add_job_button = tk.Button(self.button_frame, text="Add New Job", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_add_job_form, state=tk.DISABLED)
         self.edit_job_button = tk.Button(self.button_frame, text="Edit Job", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_edit_job_form, state=tk.DISABLED)
         self.delete_job_button = tk.Button(self.button_frame, text="Delete Job", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_delete_job_form, state=tk.DISABLED)
         self.important_jobs_button = tk.Button(self.button_frame, text="Show Important Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
         self.close_all_button = tk.Button(self.button_frame, text="Close All Important Jobs Windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
 
-
-        self.refresh_button.pack(side=tk.LEFT, padx=5)
         self.add_job_button.pack(side=tk.LEFT, padx=5)
         self.edit_job_button.pack(side=tk.LEFT, padx=5)
         self.delete_job_button.pack(side=tk.LEFT, padx=5)
@@ -230,7 +227,6 @@ class JobDisplayApp:
             self.search_label.master.pack(pady=10)
             self.button_frame.pack(pady=10)
             self.add_job_button.configure(state=tk.NORMAL)
-            self.refresh_button.configure(state=tk.NORMAL)
             self.important_jobs_button.configure(state=tk.NORMAL)
             self.edit_job_button.configure(state=tk.DISABLED)
             self.delete_job_button.configure(state=tk.DISABLED)
@@ -325,7 +321,6 @@ class JobDisplayApp:
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load jobs: {e}")
             self.root.focus_force()
-
 
     def filter_by_date(self, df, query):
         # The `query` should be in the form of 'day:DD', 'month:MM', or 'year:YYYY'.

@@ -1,6 +1,8 @@
 import tkinter as tk
-from tkinter import simpledialog, messagebox
+from tkinter import simpledialog, messagebox, simpledialog, messagebox
 import pandas as pd
+from textwrap import shorten
+from tkinter import font
 
 # Global variables to track the state
 open_windows = []
@@ -16,50 +18,38 @@ class ImportantJobsWindow:
         try:
             self.window = tk.Toplevel(parent)
             self.window.title("Important Jobs")
-            self.window.update_idletasks()  # Ensure the window is fully created
-            self.window.state('zoomed')  # Maximize the window
+            self.window.update_idletasks()
+            self.window.state('zoomed')
 
-            # Create a canvas to enable scrolling
             self.canvas = tk.Canvas(self.window)
             self.canvas.pack(side='left', fill='both', expand=True)
 
-            # Add a vertical scrollbar to the canvas
             self.scrollbar = tk.Scrollbar(self.window, orient='vertical', command=self.canvas.yview)
             self.scrollbar.pack(side='right', fill='y')
 
-            # Configure the canvas to use the scrollbar
             self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
-            # Create a frame inside the canvas to hold job frames
             self.scrollable_frame = tk.Frame(self.canvas)
             self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
 
-            # Bind the frame to configure events
             self.scrollable_frame.bind("<Configure>", self.on_frame_configure)
 
-            # Bind the window close event to the callback
             self.on_close_callback = on_close_callback
             self.num_jobs = num_jobs
             self.jobs_df = jobs_df
             self.job_frames = []
 
-            # Initialize max_width and max_height
             self.max_width = 0
             self.max_height = 0
 
-            # Bind scroll events to the canvas for scrolling
             self.canvas.bind_all("<MouseWheel>", self._on_mouse_wheel)
-            self.canvas.bind_all("<Button-4>", self._on_mouse_wheel)  # Linux support for scroll up
-            self.canvas.bind_all("<Button-5>", self._on_mouse_wheel)  # Linux support for scroll down
+            self.canvas.bind_all("<Button-4>", self._on_mouse_wheel)
+            self.canvas.bind_all("<Button-5>", self._on_mouse_wheel)
 
-            # Create initial display
             self.update_display()
 
-            # Ensure the view starts focused on the first entry
-            self.window.after(100, self.scroll_to_center)  # Schedule scrolling after a short delay
-
-            # Ensure the window is focused and brought to the top
-            self.window.after(200, self.focus_and_raise)  # Schedule focus and raise after a short delay
+            self.window.after(100, self.scroll_to_center)
+            self.window.after(200, self.focus_and_raise)
 
             self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         except Exception as e:
@@ -82,14 +72,24 @@ class ImportantJobsWindow:
         except Exception as e:
             messagebox.showerror("Error", f"Error focusing and raising window: {e}")
 
-    # Other methods remain unchanged
-
-
-
     def on_frame_configure(self, event=None):
         try:
             # Update the scroll region to match the frame's size
             self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+            # Get the size of the canvas and the scrollable frame
+            canvas_width = self.canvas.winfo_width()
+            canvas_height = self.canvas.winfo_height()
+            frame_width = self.scrollable_frame.winfo_reqwidth()
+            frame_height = self.scrollable_frame.winfo_reqheight()
+
+            # Enable or disable scrolling based on content size
+            if frame_height <= canvas_height:
+                self.scrollbar.pack_forget()  # Remove the scrollbar
+                self.canvas.unbind_all("<MouseWheel>")  # Disable mouse wheel scrolling
+            else:
+                self.scrollbar.pack(side='right', fill='y')  # Add the scrollbar
+                self.canvas.bind_all("<MouseWheel>", self._on_mouse_wheel)  # Enable mouse wheel scrolling
 
             # Center the content
             self.center_content()
@@ -121,35 +121,39 @@ class ImportantJobsWindow:
 
     def scroll_to_center(self):
         try:
-            self.scrollable_frame.update_idletasks()  # Ensure all sizes are updated
+            self.scrollable_frame.update_idletasks()
 
-            # Get the height of the canvas (visible area)
             canvas_height = self.canvas.winfo_height()
 
-            # Calculate the total height of the job frames, including padding
-            total_job_height = len(self.job_frames) * (self.max_height + 20)  # 20 is your current padding
+            total_job_height = len(self.job_frames) * (self.max_height + 20)
 
-            # Calculate the available space for centering the content
             available_space = canvas_height - total_job_height
 
-            # Calculate the exact padding needed to center the content
             perfect_padding = max(0, available_space // 2)
 
-            reduction_factor = 0.6
+            reduction_factor = 0.3  # Reduced to make space smaller
             adjusted_height = int(perfect_padding * reduction_factor)
 
-            # Apply this adjusted padding to the dummy frame
+            # Create or update the dummy frame
             if hasattr(self, 'dummy_frame'):
                 self.dummy_frame.config(height=adjusted_height)
             else:
                 self.dummy_frame = tk.Frame(self.scrollable_frame, height=adjusted_height)
-                self.dummy_frame.pack(fill='x')
+                self.dummy_frame.pack(fill='x', padx=0, pady=0)  # Adjust padding here
 
-            # Refresh the display to apply changes
+            # Create the format label in the dummy frame
+            format_label = tk.Label(self.dummy_frame, text="FORMAT :", font=("Arial", 14, 'bold'), anchor='center')
+            format_label.pack(pady=0)  # Adjust vertical padding here
+
+            format_details_label = tk.Label(self.dummy_frame, text="SACO | CLIENTE | DESCRIÇÃO | QUANTIDADE | SECTOR", font=("Arial", 16), anchor='center', fg='#2f73b4')
+            format_details_label.pack(pady=0)  # Adjust vertical padding here
+
+            entrega_label = tk.Label(self.dummy_frame, text="ENTREGA", font=("Arial", 16), anchor='center', fg='#2f73b4')
+            entrega_label.pack(pady=0)  # Adjust vertical padding here
+
             self.update_display()
 
             if self.job_frames:
-                # Ensure the first job frame is centered vertically
                 first_job_frame_y = self.canvas.bbox("all")[1]
                 first_job_frame_height = self.job_frames[0].winfo_height()
                 center_y = (canvas_height - first_job_frame_height) // 2
@@ -168,47 +172,93 @@ class ImportantJobsWindow:
             important_jobs = self.jobs_df.head(self.num_jobs)
 
             # Initialize fixed frame width
-            self.fixed_width = 500  # Set a fixed width for the frame
+            self.fixed_width = 1400  # Set a fixed width for the frame
+            self.max_frame_width = 1300  # Maximum width to prevent frames from expanding off-screen
 
             if important_jobs.empty:
                 tk.Label(self.scrollable_frame, text="No important jobs to display.", font=("Arial", 18)).pack(padx=20, pady=20)
             else:
-                # Create and pack job frames
+                # To store text widths for averaging
+                text_widths = []
+                padx_values = []
+
+                # First pass: Measure text widths
+                for _, job in important_jobs.iterrows():
+                    descr_text = shorten(job['DESCRIÇÃO DO TRABALHO'], width=60, placeholder="...")
+                    client_text = shorten(job['CLIENTE'], width=35, placeholder="...")
+
+                    details_text = f"{job['SACO']}  |  {client_text}  |  {descr_text}  |  {job['QUANT.']}  |  {job['SECTOR EM QUE ESTÁ']}"
+
+                    # Set the font size
+                    font_size = 16
+                    font_name = "Arial"
+
+                    # Calculate the width of the details_text
+                    text_width = self.get_text_width(details_text, font_name, font_size)
+                    text_widths.append(text_width)
+
+                    # Calculate individual padx value
+                    padx_value_details = max((self.fixed_width - text_width) // 2, 0)
+                    padx_values.append(padx_value_details)
+
+                # Calculate average padx and wraplength
+                avg_padx_value = sum(padx_values) // len(padx_values) - (min(padx_values) // 2)
+                avg_wraplength = self.fixed_width - 2 * avg_padx_value - 50
+
+                # Second pass: Create and pack job frames using average padx and wraplength
                 for idx, (_, job) in enumerate(important_jobs.iterrows()):
                     try:
                         text_color = 'red' if idx == 0 else 'black'
                         bd_value = 4 if idx == 0 else 2
 
                         # Create job frame with fixed width and prevent resizing
-                        job_frame = tk.Frame(self.scrollable_frame, bd=bd_value, relief='solid', width=self.fixed_width, bg="lightgray")
-                        job_frame.pack(padx=10, pady=15, fill='x', expand=False)
+                        job_frame = tk.Frame(self.scrollable_frame, bd=bd_value, width=self.fixed_width, bg="lightgray")
+                        
+                        # Pack with center alignment
+                        job_frame.pack(padx=5, pady=10, fill='x', expand=False, anchor='center')
 
                         self.job_frames.append(job_frame)
 
-                        # Use a LabelFrame widget inside the job_frame for job details
-                        details_frame = tk.LabelFrame(job_frame, bg="lightgray", width=self.fixed_width, padx=10, pady=10)
-                        details_frame.pack(fill='x', expand=False)  # Ensure it fills the width but does not expand the frame
+                        # Re-create the text strings
+                        descr_text = shorten(job['DESCRIÇÃO DO TRABALHO'], width=60, placeholder="...")
+                        client_text = shorten(job['CLIENTE'], width=35, placeholder="...")
 
-                        # Create labels with wraplength applied
-                        tk.Label(details_frame, text=f"SACO: {job['SACO']}", font=("Arial", 23 if idx == 0 else 18, 'bold'), fg=text_color, bg="lightgray", wraplength=self.fixed_width - 20, width=int(self.fixed_width / 10)).pack(pady=5, anchor='center')
-                        tk.Label(details_frame, text=f"CLIENTE: {job['CLIENTE']}", font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=self.fixed_width - 20, width=int(self.fixed_width / 10)).pack(pady=5, anchor='center')
-                        tk.Label(details_frame, text=f"DESCRIÇÃO: {job['DESCRIÇÃO DO TRABALHO']}", font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=self.fixed_width - 20, width=int(self.fixed_width / 10)).pack(pady=5, anchor='center')
-                        tk.Label(details_frame, text=f"QUANT.: {job['QUANT.']}", font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=self.fixed_width - 20, width=int(self.fixed_width / 10)).pack(pady=5, anchor='center')
+                        details_text = f"{job['SACO']}  |  {client_text}  |  {descr_text}  |  {job['QUANT.']}  |  {job['SECTOR EM QUE ESTÁ']}"
 
-                        # Conditionally display the 'DATA ENTREGA' field
+                        # Use a Frame widget inside the job_frame for job details
+                        details_frame = tk.Frame(job_frame, bg="lightgray", width=self.fixed_width, padx=10, pady=5)
+                        details_frame.pack(fill='x', expand=False, padx=avg_padx_value, anchor='center')
+
+                        # Apply the average wraplength
+                        tk.Label(details_frame, text=details_text, font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
+
                         if pd.isna(job['DATA ENTREGA']):
-                            tk.Label(details_frame, text=f"ENTREGA: NÃO TEM", font=("Arial", 20 if idx == 0 else 16, 'italic'), fg=text_color, bg="lightgray", wraplength=self.fixed_width - 20, width=int(self.fixed_width / 10)).pack(pady=5, anchor='center')
+                            entrega_text = "SEM DATA ENTREGA"
                         else:
-                            tk.Label(details_frame, text=f"ENTREGA: {job['DATA ENTREGA']}", font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=self.fixed_width - 20, width=int(self.fixed_width / 10)).pack(pady=5, anchor='center')
+                            entrega_text = f"{job['DATA ENTREGA']}"
+
+                        tk.Label(details_frame, text=entrega_text, font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
 
                     except Exception as e:
                         messagebox.showerror("Error", f"Error displaying job {idx}: {e}")
 
+            # Update canvas and scrollable_frame to reflect changes
             self.scrollable_frame.update_idletasks()
-            self.on_frame_configure()
+            self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+            # Scroll to the top after updating the display
+            self.canvas.yview_moveto(0)
 
         except Exception as e:
             messagebox.showerror("Error", f"Error updating display: {e}")
+
+
+    def get_text_width(self, text, font_name, font_size):
+        """
+        Measure the width of the text in pixels for a given font and size.
+        """
+        tk_font = font.Font(family=font_name, size=font_size)
+        return tk_font.measure(text)
 
     def scroll_to_entry(self, index):
         try:
@@ -249,13 +299,36 @@ def update_button_state(important_jobs_button, close_all_button):
     except Exception as e:
         messagebox.showerror("Error", f"Error updating button state: {e}")
 
+class CustomModalDialog(simpledialog.Dialog):
+    def body(self, master):
+        tk.Label(master, text="How many Important Jobs screens would you like to open?").grid(row=0)
+        self.entry = tk.Entry(master)
+        self.entry.grid(row=1)
+        return self.entry  # initial focus on entry widget
+
+    def validate(self):
+        try:
+            value = int(self.entry.get())
+            if 1 <= value <= 10:
+                self.result = value
+                return True
+            else:
+                messagebox.showwarning("Invalid Input", "Please enter a number between 1 and 10.")
+                return False
+        except ValueError:
+            messagebox.showwarning("Invalid Input", "Please enter a valid integer.")
+            return False
+
 def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button):
     global original_text, original_command, num_windows
 
     try:
-        num_screens = simpledialog.askinteger("Number of Screens", "How many Important Jobs screens would you like to open?", minvalue=1, maxvalue=10)
-        
-        if num_screens is not None:
+        # Create a custom modal dialog
+        dialog = CustomModalDialog(root, title="Number of Screens")
+
+        if dialog.result is not None:  # Check if user input was successful
+            num_screens = dialog.result
+
             # Store the original button state if not already stored
             if not original_text:
                 original_text = important_jobs_button.cget("text")
@@ -267,7 +340,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
             # Update the number of windows and open new ones
             num_windows = num_screens
             for _ in range(num_windows):
-                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=5, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button))
+                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=8, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button))
                 open_windows.append(window)
 
             # Show the Close All button
@@ -286,6 +359,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                     messagebox.showerror("Error", f"Error closing all windows: {e}")
 
             close_all_button.config(command=close_all_windows)
+
     except Exception as e:
         messagebox.showerror("Error", f"Error showing important jobs: {e}")
 
@@ -293,7 +367,7 @@ def add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_butto
     global num_windows
     try:
         num_windows += 1
-        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=5, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button)))
+        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=8, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button)))
     except Exception as e:
         messagebox.showerror("Error", f"Error adding important jobs window: {e}")
 
@@ -305,7 +379,7 @@ def window_closed(important_jobs_button, close_all_button):
     except Exception as e:
         messagebox.showerror("Error", f"Error handling window closed: {e}")
 
-def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=5, buffer_size=20):
+def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=8, buffer_size=20):
     global jobs_df_update, added_jobs_df_update
 
     try:
@@ -356,10 +430,10 @@ def refresh_all_windows():
     
     try:
         # Get the updated data
-        updated_data = get_important_jobs_data(jobs_df_update, added_jobs_df_update, num_jobs=5)
+        updated_data = get_important_jobs_data(jobs_df_update, added_jobs_df_update, num_jobs=8)
 
         # Always get the currently displayed 'SACO' values
-        new_displayed_sacos = get_displayed_saco_values(updated_data, 5)
+        new_displayed_sacos = get_displayed_saco_values(updated_data, 6)
 
         # Update each open window with the latest data and refresh its display
         for window in open_windows:
