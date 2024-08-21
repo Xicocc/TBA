@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import simpledialog, messagebox
+from tkinter import simpledialog, messagebox, simpledialog, messagebox
 import pandas as pd
 from textwrap import shorten
 from tkinter import font
@@ -145,10 +145,10 @@ class ImportantJobsWindow:
             format_label = tk.Label(self.dummy_frame, text="FORMAT :", font=("Arial", 14, 'bold'), anchor='center')
             format_label.pack(pady=0)  # Adjust vertical padding here
 
-            format_details_label = tk.Label(self.dummy_frame, text="SACO | CLIENTE | DESCRIÇÃO | QUANTIDADE | SECTOR", font=("Arial", 16), anchor='center')
+            format_details_label = tk.Label(self.dummy_frame, text="SACO | CLIENTE | DESCRIÇÃO | QUANTIDADE | SECTOR", font=("Arial", 16), anchor='center', fg='#2f73b4')
             format_details_label.pack(pady=0)  # Adjust vertical padding here
 
-            entrega_label = tk.Label(self.dummy_frame, text="ENTREGA", font=("Arial", 16), anchor='center')
+            entrega_label = tk.Label(self.dummy_frame, text="ENTREGA", font=("Arial", 16), anchor='center', fg='#2f73b4')
             entrega_label.pack(pady=0)  # Adjust vertical padding here
 
             self.update_display()
@@ -178,7 +178,34 @@ class ImportantJobsWindow:
             if important_jobs.empty:
                 tk.Label(self.scrollable_frame, text="No important jobs to display.", font=("Arial", 18)).pack(padx=20, pady=20)
             else:
-                # Create and pack job frames
+                # To store text widths for averaging
+                text_widths = []
+                padx_values = []
+
+                # First pass: Measure text widths
+                for _, job in important_jobs.iterrows():
+                    descr_text = shorten(job['DESCRIÇÃO DO TRABALHO'], width=60, placeholder="...")
+                    client_text = shorten(job['CLIENTE'], width=35, placeholder="...")
+
+                    details_text = f"{job['SACO']}  |  {client_text}  |  {descr_text}  |  {job['QUANT.']}  |  {job['SECTOR EM QUE ESTÁ']}"
+
+                    # Set the font size
+                    font_size = 16
+                    font_name = "Arial"
+
+                    # Calculate the width of the details_text
+                    text_width = self.get_text_width(details_text, font_name, font_size)
+                    text_widths.append(text_width)
+
+                    # Calculate individual padx value
+                    padx_value_details = max((self.fixed_width - text_width) // 2, 0)
+                    padx_values.append(padx_value_details)
+
+                # Calculate average padx and wraplength
+                avg_padx_value = sum(padx_values) // len(padx_values) - (min(padx_values) // 2)
+                avg_wraplength = self.fixed_width - 2 * avg_padx_value - 50
+
+                # Second pass: Create and pack job frames using average padx and wraplength
                 for idx, (_, job) in enumerate(important_jobs.iterrows()):
                     try:
                         text_color = 'red' if idx == 0 else 'black'
@@ -186,50 +213,31 @@ class ImportantJobsWindow:
 
                         # Create job frame with fixed width and prevent resizing
                         job_frame = tk.Frame(self.scrollable_frame, bd=bd_value, width=self.fixed_width, bg="lightgray")
-                        job_frame.pack(padx=5, pady=10, fill='x', expand=False)
+                        
+                        # Pack with center alignment
+                        job_frame.pack(padx=5, pady=10, fill='x', expand=False, anchor='center')
 
                         self.job_frames.append(job_frame)
 
-                        # Create labels with the new format and truncation for DESCRIÇÃO
+                        # Re-create the text strings
                         descr_text = shorten(job['DESCRIÇÃO DO TRABALHO'], width=60, placeholder="...")
                         client_text = shorten(job['CLIENTE'], width=35, placeholder="...")
 
                         details_text = f"{job['SACO']}  |  {client_text}  |  {descr_text}  |  {job['QUANT.']}  |  {job['SECTOR EM QUE ESTÁ']}"
 
-                        def get_text_width(text, font_name, font_size):
-                            """
-                            Measure the width of the text in pixels for a given font and size.
-                            """
-                            # Create a Tkinter Font object
-                            tk_font = font.Font(family=font_name, size=font_size)
-                            # Measure the text width
-                            return tk_font.measure(text)
-
-                        # Set the font size
-                        font_size = 20 if idx == 0 else 16
-                        font_name = "Arial"
-
-                        # Calculate the width of the details_text
-                        text_width = get_text_width(details_text, font_name, font_size)
-                        # Calculate padding and wrap length
-                        padx_value_details = max((self.fixed_width - text_width) // 2, 0)
-                        wrap_value = self.fixed_width - 2 * padx_value_details - 20  # Subtract additional margin
-
-                        # Ensure the frame doesn't exceed the max width
-                        frame_width = min(self.fixed_width, self.max_frame_width)
-
                         # Use a Frame widget inside the job_frame for job details
-                        details_frame = tk.Frame(job_frame, bg="lightgray", width=frame_width, padx=10, pady=5)
-                        details_frame.pack(fill='x', expand=False, padx=padx_value_details)
+                        details_frame = tk.Frame(job_frame, bg="lightgray", width=self.fixed_width, padx=10, pady=5)
+                        details_frame.pack(fill='x', expand=False, padx=avg_padx_value, anchor='center')
 
-                        tk.Label(details_frame, text=details_text, font=(font_name, font_size), fg=text_color, bg="lightgray", wraplength=wrap_value, anchor='w').pack(pady=2)
+                        # Apply the average wraplength
+                        tk.Label(details_frame, text=details_text, font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
 
                         if pd.isna(job['DATA ENTREGA']):
                             entrega_text = "SEM DATA ENTREGA"
                         else:
                             entrega_text = f"{job['DATA ENTREGA']}"
 
-                        tk.Label(details_frame, text=entrega_text, font=(font_name, font_size), fg=text_color, bg="lightgray", wraplength=wrap_value, anchor='w').pack(pady=2)
+                        tk.Label(details_frame, text=entrega_text, font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
 
                     except Exception as e:
                         messagebox.showerror("Error", f"Error displaying job {idx}: {e}")
@@ -238,8 +246,19 @@ class ImportantJobsWindow:
             self.scrollable_frame.update_idletasks()
             self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
+            # Scroll to the top after updating the display
+            self.canvas.yview_moveto(0)
+
         except Exception as e:
             messagebox.showerror("Error", f"Error updating display: {e}")
+
+
+    def get_text_width(self, text, font_name, font_size):
+        """
+        Measure the width of the text in pixels for a given font and size.
+        """
+        tk_font = font.Font(family=font_name, size=font_size)
+        return tk_font.measure(text)
 
     def scroll_to_entry(self, index):
         try:
@@ -280,13 +299,36 @@ def update_button_state(important_jobs_button, close_all_button):
     except Exception as e:
         messagebox.showerror("Error", f"Error updating button state: {e}")
 
+class CustomModalDialog(simpledialog.Dialog):
+    def body(self, master):
+        tk.Label(master, text="How many Important Jobs screens would you like to open?").grid(row=0)
+        self.entry = tk.Entry(master)
+        self.entry.grid(row=1)
+        return self.entry  # initial focus on entry widget
+
+    def validate(self):
+        try:
+            value = int(self.entry.get())
+            if 1 <= value <= 10:
+                self.result = value
+                return True
+            else:
+                messagebox.showwarning("Invalid Input", "Please enter a number between 1 and 10.")
+                return False
+        except ValueError:
+            messagebox.showwarning("Invalid Input", "Please enter a valid integer.")
+            return False
+
 def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button):
     global original_text, original_command, num_windows
 
     try:
-        num_screens = simpledialog.askinteger("Number of Screens", "How many Important Jobs screens would you like to open?", minvalue=1, maxvalue=10)
-        
-        if num_screens is not None:
+        # Create a custom modal dialog
+        dialog = CustomModalDialog(root, title="Number of Screens")
+
+        if dialog.result is not None:  # Check if user input was successful
+            num_screens = dialog.result
+
             # Store the original button state if not already stored
             if not original_text:
                 original_text = important_jobs_button.cget("text")
@@ -298,7 +340,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
             # Update the number of windows and open new ones
             num_windows = num_screens
             for _ in range(num_windows):
-                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=6, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button))
+                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=8, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button))
                 open_windows.append(window)
 
             # Show the Close All button
@@ -317,6 +359,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                     messagebox.showerror("Error", f"Error closing all windows: {e}")
 
             close_all_button.config(command=close_all_windows)
+
     except Exception as e:
         messagebox.showerror("Error", f"Error showing important jobs: {e}")
 
@@ -324,7 +367,7 @@ def add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_butto
     global num_windows
     try:
         num_windows += 1
-        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=6, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button)))
+        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=8, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button)))
     except Exception as e:
         messagebox.showerror("Error", f"Error adding important jobs window: {e}")
 
@@ -336,7 +379,7 @@ def window_closed(important_jobs_button, close_all_button):
     except Exception as e:
         messagebox.showerror("Error", f"Error handling window closed: {e}")
 
-def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=6, buffer_size=20):
+def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=8, buffer_size=20):
     global jobs_df_update, added_jobs_df_update
 
     try:
@@ -387,7 +430,7 @@ def refresh_all_windows():
     
     try:
         # Get the updated data
-        updated_data = get_important_jobs_data(jobs_df_update, added_jobs_df_update, num_jobs=5)
+        updated_data = get_important_jobs_data(jobs_df_update, added_jobs_df_update, num_jobs=8)
 
         # Always get the currently displayed 'SACO' values
         new_displayed_sacos = get_displayed_saco_values(updated_data, 6)
