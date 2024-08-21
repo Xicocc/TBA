@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import simpledialog, messagebox, simpledialog, messagebox
+from tkinter import simpledialog, messagebox
 import pandas as pd
 from textwrap import shorten
 from tkinter import font
