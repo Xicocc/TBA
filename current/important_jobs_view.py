@@ -3,6 +3,7 @@ from tkinter import simpledialog, messagebox
 import pandas as pd
 from textwrap import shorten
 from tkinter import font
+from constants import *
 
 # Global variables to track the state
 open_windows = []
@@ -161,96 +162,68 @@ class ImportantJobsWindow:
         except Exception as e:
             messagebox.showerror("Error", f"Error scrolling to center: {e}")
 
+    #Beggining of functions to handle the creation/updating of the important jobs windows
+
     def update_display(self):
         try:
-            # Clear old job frames
-            for frame in self.job_frames:
-                frame.destroy()
-            self.job_frames = []
+            self.clear_job_frames()
 
-            # Get the top num_jobs rows
             important_jobs = self.jobs_df.head(self.num_jobs)
-
-            # Initialize fixed frame width
-            self.fixed_width = 1400  # Set a fixed width for the frame
-            self.max_frame_width = 1300  # Maximum width to prevent frames from expanding off-screen
+            screen_width = self.scrollable_frame.winfo_screenwidth()
+            self.fixed_width = screen_width - 40
+            self.max_frame_width = screen_width - 140
 
             if important_jobs.empty:
-                tk.Label(self.scrollable_frame, text="No important jobs to display.", font=("Arial", 18)).pack(padx=20, pady=20)
+                self.display_no_jobs_message()
             else:
-                # To store text widths for averaging
-                text_widths = []
-                padx_values = []
+                padx_values, avg_wraplength = self.calculate_padding_and_wraplength(important_jobs)
 
-                # First pass: Measure text widths
-                for _, job in important_jobs.iterrows():
-                    descr_text = shorten(job['DESCRIÇÃO DO TRABALHO'], width=60, placeholder="...")
-                    client_text = shorten(job['CLIENTE'], width=35, placeholder="...")
+                # Determine the date of the first job entry
+                first_entry_date = self.get_date_from_job(important_jobs.iloc[0])
 
-                    details_text = f"{job['SACO']}  |  {client_text}  |  {descr_text}  |  {job['QUANT.']}  |  {job['SECTOR EM QUE ESTÁ']}"
-
-                    # Set the font size
-                    font_size = 16
-                    font_name = "Arial"
-
-                    # Calculate the width of the details_text
-                    text_width = self.get_text_width(details_text, font_name, font_size)
-                    text_widths.append(text_width)
-
-                    # Calculate individual padx value
-                    padx_value_details = max((self.fixed_width - text_width) // 2, 0)
-                    padx_values.append(padx_value_details)
-
-                # Calculate average padx and wraplength
-                avg_padx_value = sum(padx_values) // len(padx_values) - (min(padx_values) // 2)
-                avg_wraplength = self.fixed_width - 2 * avg_padx_value - 50
-
-                # Second pass: Create and pack job frames using average padx and wraplength
+                # Iterate over the jobs to apply conditional formatting
                 for idx, (_, job) in enumerate(important_jobs.iterrows()):
-                    try:
-                        text_color = 'red' if idx == 0 else 'black'
-                        bd_value = 4 if idx == 0 else 2
+                    job_date = self.get_date_from_job(job)
 
-                        # Create job frame with fixed width and prevent resizing
-                        job_frame = tk.Frame(self.scrollable_frame, bd=bd_value, width=self.fixed_width, bg="lightgray")
-                        
-                        # Pack with center alignment
-                        job_frame.pack(padx=5, pady=10, fill='x', expand=False, anchor='center')
+                    # Determine if the job should be highlighted and set font size
+                    is_highlighted = self.should_highlight_job(job_date, first_entry_date, idx)
+                    font_size = self.get_font_size(is_highlighted, idx == 0)
 
-                        self.job_frames.append(job_frame)
+                    # Create and display the job frames
+                    self.create_and_display_job_frame(job, idx, is_highlighted, font_size, padx_values, avg_wraplength)
 
-                        # Re-create the text strings
-                        descr_text = shorten(job['DESCRIÇÃO DO TRABALHO'], width=60, placeholder="...")
-                        client_text = shorten(job['CLIENTE'], width=35, placeholder="...")
-
-                        details_text = f"{job['SACO']}  |  {client_text}  |  {descr_text}  |  {job['QUANT.']}  |  {job['SECTOR EM QUE ESTÁ']}"
-
-                        # Use a Frame widget inside the job_frame for job details
-                        details_frame = tk.Frame(job_frame, bg="lightgray", width=self.fixed_width, padx=10, pady=5)
-                        details_frame.pack(fill='x', expand=False, padx=avg_padx_value, anchor='center')
-
-                        # Apply the average wraplength
-                        tk.Label(details_frame, text=details_text, font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
-
-                        if pd.isna(job['DATA ENTREGA']):
-                            entrega_text = "SEM DATA ENTREGA"
-                        else:
-                            entrega_text = f"{job['DATA ENTREGA']}"
-
-                        tk.Label(details_frame, text=entrega_text, font=("Arial", 20 if idx == 0 else 16), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
-
-                    except Exception as e:
-                        messagebox.showerror("Error", f"Error displaying job {idx}: {e}")
-
-            # Update canvas and scrollable_frame to reflect changes
-            self.scrollable_frame.update_idletasks()
-            self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-            # Scroll to the top after updating the display
-            self.canvas.yview_moveto(0)
-
+            self.update_canvas()
         except Exception as e:
             messagebox.showerror("Error", f"Error updating display: {e}")
+
+    def get_date_from_job(self, job):
+        """Extract the date part (day, month, year) from the job's CONST_DATA_ENTR field."""
+        if pd.isna(job[CONST_DATA_ENTR]):
+            return None
+        return job[CONST_DATA_ENTR].date()
+
+    def should_highlight_job(self, job_date, first_entry_date, idx):
+        """Determine whether a job should be highlighted based on its date."""
+        if job_date is None:
+            return False
+        # Highlight the job if it shares the same date as the first entry or if it's the first entry
+        return job_date == first_entry_date or idx == 0
+
+    def get_font_size(self, is_highlighted, is_first_entry):
+        """Determine the font size based on whether the job is highlighted and if it's the first entry."""
+        if is_highlighted:
+            return 24 if is_first_entry else 22
+        return 18
+
+    def clear_job_frames(self):
+        """Clear existing job frames from the display."""
+        for frame in self.job_frames:
+            frame.destroy()
+        self.job_frames = []
+
+    def display_no_jobs_message(self):
+        """Display a message when there are no important jobs."""
+        tk.Label(self.scrollable_frame, text="No important jobs to display.", font=("Arial", 18)).pack(padx=20, pady=20)
 
     def get_text_width(self, text, font_name, font_size):
         """
@@ -258,6 +231,80 @@ class ImportantJobsWindow:
         """
         tk_font = font.Font(family=font_name, size=font_size)
         return tk_font.measure(text)
+
+    def calculate_padding_and_wraplength(self, jobs):
+        """Calculate padding and wraplength based on job text lengths."""
+        text_widths = []
+        padx_values = []
+        font_name = "Arial"
+        font_size = 18
+
+        for _, job in jobs.iterrows():
+            details_text = self.create_details_text(job)
+            text_width = self.get_text_width(details_text, font_name, font_size)
+            text_widths.append(text_width)
+
+            padx_value = max((self.fixed_width - text_width) // 2, 0)
+            padx_values.append(padx_value)
+
+        avg_padx_value = sum(padx_values) // len(padx_values) - (min(padx_values) // 2)
+        avg_wraplength = self.fixed_width - 2 * avg_padx_value - 35
+
+        # Ensure the wraplength does not exceed the max_frame_width
+        if avg_wraplength > self.max_frame_width:
+            avg_wraplength = self.max_frame_width
+
+        return avg_padx_value, avg_wraplength
+
+    def create_and_display_job_frame(self, job, idx, is_highlighted, font_size, padx_values, avg_wraplength):
+        """Create and display a job frame with appropriate formatting."""
+        try:
+            job_frame = self.create_job_frame(is_highlighted)
+            self.job_frames.append(job_frame)
+
+            details_text = self.create_details_text(job)
+            entrega_text = self.create_entrega_text(job)
+
+            self.add_details_to_frame(job_frame, details_text, entrega_text, is_highlighted, font_size, padx_values, avg_wraplength)
+        except Exception as e:
+            messagebox.showerror("Error", f"Error displaying job {idx}: {e}")
+
+    def create_job_frame(self, is_highlighted):
+        """Create and return a job frame widget with conditional styling."""
+        text_color = 'red' if is_highlighted else 'black'
+        bd_value = 4 if is_highlighted else 2
+
+        job_frame = tk.Frame(self.scrollable_frame, bd=bd_value, width=self.fixed_width, bg="lightgray")
+        job_frame.pack(padx=5, pady=10, fill='x', expand=False, anchor='center')
+        return job_frame
+
+    def create_details_text(self, job):
+        """Create and return the details text for a job."""
+        descr_text = shorten(job[ORI_CONST_DESC], width=60, placeholder="...")
+        client_text = shorten(job[CONST_CLIENTE], width=35, placeholder="...")
+        return f"{job[CONST_SACO]}  |  {client_text}  |  {descr_text}  |  {job[CONST_QUANT]}  |  {job[ORI_CONST_SECTOR]}"
+
+    def create_entrega_text(self, job):
+        """Create and return the entrega text for a job."""
+        return "SEM DATA ENTREGA" if pd.isna(job[CONST_DATA_ENTR]) else f"{job[CONST_DATA_ENTR]}"
+
+    def add_details_to_frame(self, job_frame, details_text, entrega_text, is_highlighted, font_size, avg_padx_value, avg_wraplength):
+        """Add details labels to the job frame with conditional styling."""
+        text_color = 'red' if is_highlighted else 'black'
+
+        details_frame = tk.Frame(job_frame, bg="lightgray", width=self.fixed_width, padx=10, pady=5)
+        details_frame.pack(fill='x', expand=False, padx=avg_padx_value, anchor='center')
+
+        tk.Label(details_frame, text=details_text, font=("Arial", font_size), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
+        tk.Label(details_frame, text=entrega_text, font=("Arial", font_size), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
+
+    def update_canvas(self):
+        """Update the canvas and scroll region."""
+        self.scrollable_frame.update_idletasks()
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.canvas.yview_moveto(0)
+
+    #End of the creation/updating functions
 
     def scroll_to_entry(self, index):
         try:
@@ -286,6 +333,7 @@ class ImportantJobsWindow:
             global open_windows
             open_windows = [win for win in open_windows if win.window != self.window]
             self.window.destroy()
+            self.window = None
         except Exception as e:
             messagebox.showerror("Error", f"Error closing window: {e}")
 
@@ -339,7 +387,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
             # Update the number of windows and open new ones
             num_windows = num_screens
             for _ in range(num_windows):
-                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=8, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button))
+                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=10, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button))
                 open_windows.append(window)
 
             # Show the Close All button
@@ -366,7 +414,7 @@ def add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_butto
     global num_windows
     try:
         num_windows += 1
-        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=8, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button)))
+        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=10, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button)))
     except Exception as e:
         messagebox.showerror("Error", f"Error adding important jobs window: {e}")
 
@@ -378,7 +426,7 @@ def window_closed(important_jobs_button, close_all_button):
     except Exception as e:
         messagebox.showerror("Error", f"Error handling window closed: {e}")
 
-def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=8, buffer_size=20):
+def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=10, buffer_size=20):
     global jobs_df_update, added_jobs_df_update
 
     try:
@@ -395,14 +443,14 @@ def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=8, buffer_size=20):
             combined_df = pd.concat(frames_to_concat, ignore_index=True)
 
             try:
-                combined_df['DATA ENTREGA'] = pd.to_datetime(combined_df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
+                combined_df[CONST_DATA_ENTR] = pd.to_datetime(combined_df[CONST_DATA_ENTR], format=DATE_FORMAT, errors='coerce')
             except Exception as e:
                 messagebox.showerror("Error", f"Date conversion error: {e}")
                 return pd.DataFrame()
 
             # Split the DataFrame into jobs with and without a valid date
-            jobs_with_date = combined_df.dropna(subset=['DATA ENTREGA']).sort_values(by='DATA ENTREGA', ascending=True)
-            jobs_without_date = combined_df[combined_df['DATA ENTREGA'].isna()]
+            jobs_with_date = combined_df.dropna(subset=[CONST_DATA_ENTR]).sort_values(by=CONST_DATA_ENTR, ascending=True)
+            jobs_without_date = combined_df[combined_df[CONST_DATA_ENTR].isna()]
 
             # Combine the jobs with date and fill up with jobs without date to reach buffer_size
             combined_jobs = pd.concat([jobs_with_date, jobs_without_date]).head(buffer_size)
@@ -418,8 +466,8 @@ def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=8, buffer_size=20):
 
 def get_displayed_saco_values(df, num_jobs):
     try:
-        # Get the 'SACO' values of the top num_jobs entries
-        return list(df.head(num_jobs)['SACO'])
+        # Get the CONST_SACO values of the top num_jobs entries
+        return list(df.head(num_jobs)[CONST_SACO])
     except Exception as e:
         messagebox.showerror("Error", f"Error getting displayed SACO values: {e}")
         return []
@@ -429,9 +477,9 @@ def refresh_all_windows():
     
     try:
         # Get the updated data
-        updated_data = get_important_jobs_data(jobs_df_update, added_jobs_df_update, num_jobs=8)
+        updated_data = get_important_jobs_data(jobs_df_update, added_jobs_df_update, num_jobs=10)
 
-        # Always get the currently displayed 'SACO' values
+        # Always get the currently displayed CONST_SACO values
         new_displayed_sacos = get_displayed_saco_values(updated_data, 6)
 
         # Update each open window with the latest data and refresh its display

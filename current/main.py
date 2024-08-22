@@ -7,6 +7,9 @@ from edit_job_form import EditJobForm
 from delete_job_form import DeleteJobForm
 from important_jobs_view import show_important_jobs, add_important_jobs_window, refresh_all_windows, get_important_jobs_data
 import json_operations
+from constants import *
+from help_window import HelpFile, HelpData
+
 
 #Avoid any future incompatibilities by making sure it converts to future versions of panda
 pd.set_option('future.no_silent_downcasting', True)
@@ -22,7 +25,7 @@ class JobDisplayApp:
 
         # Initialize data structures
         self.jobs_df = pd.DataFrame()
-        self.added_jobs_df = pd.DataFrame(columns=['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGENCIA', 'DATA ENTREGA'])
+        self.added_jobs_df = pd.DataFrame(columns=[CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR])
         self.file_path = ""
         self.selected_job_index = None
         self.editing_added_job = False
@@ -33,12 +36,41 @@ class JobDisplayApp:
         self.initial_button_frame.pack(pady=10)
 
         # Create select file button
-        self.select_file_button = tk.Button(self.initial_button_frame, text="Select Excel File", font=('SFPro', 20), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.load_file)
+        self.select_file_button = tk.Button(
+            self.initial_button_frame, text="Load File",
+            font=('SFPro', 20), pady=5, borderwidth=2, relief=tk.RIDGE,
+            command=self.load_file)
         self.select_file_button.pack(side=tk.LEFT, padx=5)
 
         # Create Load State button
-        self.load_state_button = tk.Button(self.initial_button_frame, text="Load State", font=('SFPro', 20), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.load_state)
+        self.load_state_button = tk.Button(
+            self.initial_button_frame, text="Load State",
+            font=('SFPro', 20), pady=5, borderwidth=2, relief=tk.RIDGE,
+            command=self.load_state)
         self.load_state_button.pack(side=tk.LEFT, padx=5)
+
+        # Create file help button and pack it to the right side within the same frame
+        self.file_help_button = tk.Button(
+            root, text="Help", 
+            font=('SFPro', 17), pady=5, borderwidth=2, relief=tk.RIDGE, 
+            command=self.show_file_help
+        )
+        self.file_help_button.pack(side=tk.BOTTOM, anchor='center', pady=10)
+
+        # Add a "tag" label at the bottom right of the screen
+        self.tag_label = tk.Label(
+            root, text="Developed by Francisco Carvalho, 2024 \nAll rights reserved",
+            font=('SFPro', 8), fg="gray"
+        )
+        # Use place() to position the label at the bottom right corner
+        self.tag_label.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-18)
+
+        self.cont_tag_label = tk.Label(
+            root, text="Contact :\nfranciscocosta2000@gmail.com",
+            font=('SFPro', 8), fg="gray"
+        )
+        # Use place() to position the label at the bottom left corner
+        self.cont_tag_label.place(relx=0.0, rely=1.0, anchor='sw', x=10, y=-18)
 
         # Create button frame and buttons
         self.button_frame = tk.Frame(root)
@@ -47,12 +79,15 @@ class JobDisplayApp:
         self.delete_job_button = tk.Button(self.button_frame, text="Delete Job", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_delete_job_form, state=tk.DISABLED)
         self.important_jobs_button = tk.Button(self.button_frame, text="Show Important Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
         self.close_all_button = tk.Button(self.button_frame, text="Close All Important Jobs Windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
+        self.data_help_button = tk.Button(self.button_frame, text="Help", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_data_help)
+
 
         self.add_job_button.pack(side=tk.LEFT, padx=5)
         self.edit_job_button.pack(side=tk.LEFT, padx=5)
         self.delete_job_button.pack(side=tk.LEFT, padx=5)
         self.important_jobs_button.pack(side=tk.LEFT, padx=5)
         self.close_all_button.pack(side=tk.LEFT, padx=5)
+        self.data_help_button.pack(side=tk.LEFT, padx=5)
 
         # Pack button_frame but keep it hidden initially
         self.button_frame.pack_forget()
@@ -86,6 +121,18 @@ class JobDisplayApp:
         # Bind the window close event
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
+    def show_file_help(self):
+        """Show help related to file loading."""
+        HelpFile(self.root)
+
+    def show_data_help(self):
+        """Show help related to file loading."""
+        HelpData(self.root)
+
+    def show_data_help(self):
+        """Show help related to data operations."""
+        HelpData(self.root)
+
     def load_state(self):
         """Load the saved state from a file."""
         try:
@@ -105,21 +152,26 @@ class JobDisplayApp:
                         self.added_jobs_df = pd.DataFrame(data['added_jobs_df'])
                         if self.added_jobs_df.empty:
                             # Reinitialize with the correct columns if loaded DataFrame is empty
-                            self.added_jobs_df = pd.DataFrame(columns=['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGENCIA', 'DATA ENTREGA'])
+                            self.added_jobs_df = pd.DataFrame(columns=[CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR])
                     else:
                         messagebox.showerror('Error', 'Missing added_jobs_df data')
                         self.root.focus_force()
                         return
 
                     # Standardize column names
-                    self.jobs_df.columns = self.jobs_df.columns.str.replace('URGÊNCIA / OBSERVAÇÕES', 'URGÊNCIA / OBS.', regex=False)
-                    self.added_jobs_df.columns = self.added_jobs_df.columns.str.replace('URGÊNCIA / OBSERVAÇÕES', 'URGÊNCIA / OBS.', regex=False)
+                    self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_URG, CONST_URG, regex=False)
+                    self.added_jobs_df.columns = self.added_jobs_df.columns.str.replace(ORI_CONST_URG, CONST_URG, regex=False)
 
                     # Set up Treeview columns
                     self.tree['columns'] = list(self.jobs_df.columns)
                     for col in self.tree['columns']:
-                        self.tree.heading(col, text=col)
-                        self.tree.column(col, anchor="w")
+                        if col == ORI_CONST_SECTOR:
+                            #Change the column name in treeview from 'SECTOR EM QUE ESTÁ' to 'SECTOR' for consistency
+                            self.tree.heading(col, text='SECTOR')
+                            self.tree.column(col, anchor="w")
+                        else:
+                            self.tree.heading(col, text=col)
+                            self.tree.column(col, anchor="w")
 
                     self.refresh_view()
                     messagebox.showinfo('Success', 'Data restored successfully')
@@ -159,8 +211,8 @@ class JobDisplayApp:
                         'jobs_df': self.jobs_df.to_dict(orient='records')
                     }
                     for job in state['added_jobs_df']:
-                        if job['DATA ENTREGA'] == 'DD/MM/YYYY_HH:MM':
-                            job['DATA ENTREGA'] = '-'
+                        if job[CONST_DATA_ENTR] == 'DD/MM/YYYY_HH:MM':
+                            job[CONST_DATA_ENTR] = '-'
                     if json_operations.save_json_file(state):
                         messagebox.showinfo("Info", "State saved successfully")
                     else:
@@ -212,7 +264,7 @@ class JobDisplayApp:
 
     def validate_job(self, job):
         # Check for required fields
-        required_fields = ['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ']
+        required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR]
         for field in required_fields:
             if not job.get(field):
                 return False, f"The field '{field}' is required."
@@ -243,10 +295,14 @@ class JobDisplayApp:
         # Show buttons after file is loaded
             self.select_file_button.pack_forget()
             self.load_state_button.pack_forget()
+            self.cont_tag_label.place_forget()
+            self.tag_label.place_forget()
+            self.file_help_button.pack_forget()
             self.search_label.master.pack(pady=10)
             self.button_frame.pack(pady=10)
             self.add_job_button.configure(state=tk.NORMAL)
             self.important_jobs_button.configure(state=tk.NORMAL)
+            self.data_help_button.configure(state=tk.NORMAL)
             self.edit_job_button.configure(state=tk.DISABLED)
             self.delete_job_button.configure(state=tk.DISABLED)
 
@@ -262,20 +318,20 @@ class JobDisplayApp:
                 raise FileNotFoundError("No file selected. Please try again.")
 
             self.is_loaded_data = True
-            self.enable_buttons()
             self.initial_button_frame.pack_forget()
 
             self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
-            self.tree.heading('job_id', text='SACO')
-            self.tree.heading('client', text='CLIENTE')
-            self.tree.heading('description', text='DESCRI. DO TRABALHO')
-            self.tree.heading('quantity', text='QUANT.')
-            self.tree.heading('sector', text='SETOR')
-            self.tree.heading('state', text='ESTADO')
-            self.tree.heading('urgency', text='URGÊNCIA / OBS.')
-            self.tree.heading('delivery', text='DATA ENTREGA')
+            self.tree.heading('job_id', text=CONST_SACO)
+            self.tree.heading('client', text=CONST_CLIENTE)
+            self.tree.heading('description', text='DESCRIÇÃO')
+            self.tree.heading('quantity', text=CONST_QUANT)
+            self.tree.heading('sector', text='SECTOR')
+            self.tree.heading('state', text=CONST_ESTADO)
+            self.tree.heading('urgency', text=CONST_URG)
+            self.tree.heading('delivery', text=CONST_DATA_ENTR)
 
             self.load_jobs()
+            self.enable_buttons()
             self.root.focus_force()
 
         except FileNotFoundError as fnf_error:
@@ -291,7 +347,7 @@ class JobDisplayApp:
             messagebox.showerror("Error", f"Unexpected error: {e}")
             self.root.focus_force()
 
-    def parse_date(self, date_str, format='%d/%m/%Y_%H:%M'):
+    def parse_date(self, date_str, format=DATE_FORMAT):
         """Parse a date string to a datetime object and format it back to string.
         
         Args:
@@ -313,11 +369,11 @@ class JobDisplayApp:
             df = pd.read_excel(self.file_path, skiprows=4)
             df.drop(df.columns[0], axis=1, inplace=True)
             df = df.iloc[1:]
-            df = df[['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGÊNCIA / OBSERVAÇÕES', 'DATA ENTREGA', 'Unnamed: 7', 'Unnamed: 8']]
-            df.columns = ['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGENCIA', 'DATA ENTREGA', 'ALTER', 'REPET']
+            df = df[[CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, ORI_CONST_URG, CONST_DATA_ENTR, 'Unnamed: 7', 'Unnamed: 8']]
+            df.columns = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR, 'ALTER', 'REPET']
 
             def determine_state(row):
-                if pd.notna(row['ESTADO']) and row['ESTADO'] == 'N':
+                if pd.notna(row[CONST_ESTADO]) and row[CONST_ESTADO] == 'N':
                     return 'NOVO'
                 elif pd.notna(row['ALTER']) and row['ALTER'] == 'A':
                     return 'ALTER.'
@@ -326,17 +382,17 @@ class JobDisplayApp:
                 else:
                     return 'UNKNOWN'
 
-            df['ESTADO'] = df.apply(determine_state, axis=1)
+            df[CONST_ESTADO] = df.apply(determine_state, axis=1)
             df.drop(['ALTER', 'REPET'], axis=1, inplace=True)
-            df.columns = ['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGÊNCIA / OBSERVAÇÕES', 'DATA ENTREGA']
+            df.columns = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, ORI_CONST_URG, CONST_DATA_ENTR]
 
-            df = df.dropna(subset=['SACO'])
-            last_valid_index = df[df['SACO'] != '-'].index.max()
+            df = df.dropna(subset=[CONST_SACO])
+            last_valid_index = df[df[CONST_SACO] != '-'].index.max()
             if pd.notna(last_valid_index):
                 df = df.loc[:last_valid_index]
 
-            # Use the parse_date utility function to format 'DATA ENTREGA'
-            df['DATA ENTREGA'] = df['DATA ENTREGA'].apply(self.parse_date)
+            # Use the parse_date utility function to format CONST_DATA_ENTR
+            df[CONST_DATA_ENTR] = df[CONST_DATA_ENTR].apply(self.parse_date)
 
             # Update the jobs_df with the new data
             self.jobs_df = df
@@ -344,6 +400,7 @@ class JobDisplayApp:
             # Fill NaN values differently for numeric and non-numeric columns
             self.jobs_df = self.jobs_df.apply(lambda x: x.fillna(0) if x.dtype in ['float64', 'int64'] else x.fillna("-"))
 
+            messagebox.showinfo('Success', 'Data imported from excel file successfully')
             self.refresh_view()
 
         except FileNotFoundError:
@@ -383,11 +440,11 @@ class JobDisplayApp:
             
             return False
 
-        # Convert 'DATA ENTREGA' to datetime
-        df['DATA ENTREGA'] = pd.to_datetime(df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
+        # Convert CONST_DATA_ENTR to datetime
+        df[CONST_DATA_ENTR] = pd.to_datetime(df[CONST_DATA_ENTR], format=DATE_FORMAT, errors='coerce')
 
         # Apply the date filter
-        filtered_df = df[df['DATA ENTREGA'].apply(lambda date: match_date(date, query))]
+        filtered_df = df[df[CONST_DATA_ENTR].apply(lambda date: match_date(date, query))]
 
         return filtered_df
 
@@ -404,35 +461,35 @@ class JobDisplayApp:
         else:
             # Dictionary mapping query prefixes to column names
             column_mapping = {
-                "saco:": "SACO",
-                "cliente:": "CLIENTE",
-                "desc:": "DESCRIÇÃO DO TRABALHO",
-                "quant:": "QUANT.",
-                "setor:": "SECTOR EM QUE ESTÁ",
-                "estado:": "ESTADO",
-                "urg:": "URGÊNCIA / OBS.",
-                "obs:": "URGÊNCIA / OBS."  # Handling 'obs:' as equivalent to 'urg:'
+                "saco:": CONST_SACO,
+                "cliente:": CONST_CLIENTE,
+                "desc:": ORI_CONST_DESC,
+                "quant:": CONST_QUANT,
+                "sector:": ORI_CONST_SECTOR,
+                "estado:": CONST_ESTADO,
+                "urg:": CONST_URG,
+                "obs:": CONST_URG  # Handling 'obs:' as equivalent to 'urg:'
             }
 
             # Identify the column to filter based on the query prefix
             column_to_filter = None
+            search_value = None
             for prefix, column in column_mapping.items():
                 if query.startswith(prefix):
                     column_to_filter = column
                     search_value = query[len(prefix):].strip()
                     break
 
-            if column_to_filter:
-                # Apply filter for specific column
+            if column_to_filter and search_value:
+                # Apply filter for the specific column
                 filtered_df = filtered_df[filtered_df[column_to_filter].astype(str).str.contains(search_value, case=False, na=False)]
             else:
                 # Apply general search filter
-                def match_query(row):
-                    for column in filtered_df.columns:
-                        if str(row[column]).lower().find(query.lower()) != -1:
-                            return True
-                    return False
-                filtered_df = filtered_df[filtered_df.apply(match_query, axis=1)]
+                search_value = query.strip().lower()
+                filtered_df = filtered_df[filtered_df.apply(
+                    lambda row: any(search_value in str(row[col]).lower() for col in filtered_df.columns),
+                    axis=1
+                )]
 
         return filtered_df
 
@@ -454,15 +511,15 @@ class JobDisplayApp:
                 # Apply filtering
                 filtered_df = self.filter_data(combined_df, search_query)
 
-                # Convert 'DATA ENTREGA' to datetime format for sorting
-                filtered_df['DATA ENTREGA'] = pd.to_datetime(filtered_df['DATA ENTREGA'], format='%d/%m/%Y_%H:%M', errors='coerce')
+                # Convert CONST_DATA_ENTR to datetime format for sorting
+                filtered_df[CONST_DATA_ENTR] = pd.to_datetime(filtered_df[CONST_DATA_ENTR], format=DATE_FORMAT, errors='coerce')
 
-                # Sort by 'DATA ENTREGA' if the column exists
-                if 'DATA ENTREGA' in filtered_df.columns:
-                    filtered_df = filtered_df.sort_values(by='DATA ENTREGA', ascending=True)
+                # Sort by CONST_DATA_ENTR if the column exists
+                if CONST_DATA_ENTR in filtered_df.columns:
+                    filtered_df = filtered_df.sort_values(by=CONST_DATA_ENTR, ascending=True)
 
                 # Replace NaT with '-'
-                filtered_df['DATA ENTREGA'] = filtered_df['DATA ENTREGA'].apply(lambda x: x.strftime('%d/%m/%Y_%H:%M') if pd.notna(x) else '-')
+                filtered_df[CONST_DATA_ENTR] = filtered_df[CONST_DATA_ENTR].apply(lambda x: x.strftime(DATE_FORMAT) if pd.notna(x) else '-')
 
                 # Replace NaN or empty string with "-"
                 filtered_df = filtered_df.replace({pd.NA: "-", pd.NaT: "-"})
@@ -544,8 +601,8 @@ class JobDisplayApp:
             elif df[column].dtype == 'object':
                 updated_job[column] = str(value)
 
-        # Ensure 'DATA ENTREGA' is string and handle NaN values
-        updated_job['DATA ENTREGA'] = str(updated_job['DATA ENTREGA']).replace("nan", "-")
+        # Ensure CONST_DATA_ENTR is string and handle NaN values
+        updated_job[CONST_DATA_ENTR] = str(updated_job[CONST_DATA_ENTR]).replace("nan", "-")
 
         if self.editing_added_job:
             self.added_jobs_df.iloc[self.selected_job_index] = updated_job

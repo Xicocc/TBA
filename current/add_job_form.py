@@ -1,6 +1,7 @@
 import tkinter as tk
 from datetime import datetime
 from date_placeholder import PlaceholderEntry
+from constants import *
 
 class AddJobForm:
     def __init__(self, parent, add_callback):
@@ -18,17 +19,17 @@ class AddJobForm:
         frame = tk.Frame(self.top, padx=20, pady=20)
         frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
 
-        tk.Label(frame, text="Add Job", font=('Arial', 20, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
+        tk.Label(frame, text="Add Job", font=('Arial', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         # Form Fields
         self.fields = {}
         row = 1
-        for field in ['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'ESTADO', 'URGENCIA', 'DATA ENTREGA']:
-            tk.Label(frame, text=field, width=25, anchor='w', font=('Arial', 17)).grid(row=row, column=0, sticky='w', pady=5)
-            if field == 'DATA ENTREGA':
-                entry = PlaceholderEntry(frame, "DD/MM/YYYY_HH:MM", width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('Arial', 15))
+        for field in [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR]:
+            tk.Label(frame, text=field, width=25, anchor='w', font=('Arial', 21)).grid(row=row, column=0, sticky='w', pady=5)
+            if field == CONST_DATA_ENTR:
+                entry = PlaceholderEntry(frame, "DD/MM/YYYY_HH:MM", width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('Arial', 20))
             else:
-                entry = tk.Entry(frame, width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('Arial', 15))
+                entry = tk.Entry(frame, width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('Arial', 20))
             entry.grid(row=row, column=1, sticky='ew', padx=5)
             self.fields[field] = entry
             row += 1
@@ -67,11 +68,11 @@ class AddJobForm:
         job = {field: entry.get() for field, entry in self.fields.items()}
 
         # Replace placeholder date with '-' if it hasn't been modified
-        if job['DATA ENTREGA'] == 'DD/MM/YYYY_HH:MM':
-            job['DATA ENTREGA'] = '-'
+        if job[CONST_DATA_ENTR] == 'DD/MM/YYYY_HH:MM':
+            job[CONST_DATA_ENTR] = '-'
 
         # Fields that are required
-        required_fields = ['SACO', 'CLIENTE', 'DESCRIÇÃO DO TRABALHO', 'QUANT.', 'SECTOR EM QUE ESTÁ', 'DATA ENTREGA']
+        required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_DATA_ENTR]
 
         # Check if any required fields are empty
         missing_fields = [field for field in required_fields if not job[field].strip()]
@@ -79,8 +80,8 @@ class AddJobForm:
             tk.messagebox.showerror("Missing Information", f"The following fields are required: {', '.join(missing_fields)}")
             return  # Stop the save process if required fields are missing
 
-        # Validate the datetime format for 'DATA ENTREGA'
-        if not self.validate_datetime(job['DATA ENTREGA']):
+        # Validate the datetime format for CONST_DATA_ENTR
+        if not self.validate_datetime(job[CONST_DATA_ENTR]):
             tk.messagebox.showerror("Invalid Input", "The date/time format is incorrect. Please use DD/MM/YYYY_HH:MM format.")
             return  # Stop the save process if the datetime format is incorrect
 
@@ -102,7 +103,7 @@ class AddJobForm:
         if datetime_str == '-':
             return True
         try:
-            datetime.strptime(datetime_str, "%d/%m/%Y_%H:%M")
+            datetime.strptime(datetime_str, DATE_FORMAT)
             return True
         except ValueError:
             return False
