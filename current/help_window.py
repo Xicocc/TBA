@@ -10,10 +10,9 @@ class HelpFile:
         self.help_window = tk.Toplevel(self.root)
         self.help_window.title("Help - File Loading")
         
-        # Maximize the window to fill the screen
-        self.help_window.state('zoomed')  # This makes the window fill the screen
+        # Prevent resizing
         self.help_window.resizable(False, False)
-        self.help_window.withdraw()
+        self.help_window.withdraw()  # Hide the window initially
 
         # Set the HelpFile window to be on top of the parent window
         self.help_window.transient(self.root)
@@ -39,7 +38,7 @@ class HelpFile:
         O ficheiro excel submetido deve ter a formatação correta (A qual é do conhecimento dos colaboradores). \n
         O ficheiro JSON é gerado automaticamente no processo de salvamento do estado da aplicação e NÃO deve ser alterado manualmente, correndo o risco de corromper o mesmo.
         """
-        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20)
+        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20, height=20)  # Set a fixed height
         text_widget.insert(tk.END, help_message)
         text_widget.config(state=tk.DISABLED)  # Make text read-only
         text_widget.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
@@ -59,9 +58,19 @@ class HelpFile:
         
 
     def center_window(self):
-        width = self.help_window.winfo_screenwidth()
-        height = self.help_window.winfo_screenheight() - 50
-        self.help_window.geometry(f'{width}x{height}+0+0')  # Adjust size and position
+        # Get the screen width and height, subtracting 50 pixels from height for the taskbar
+        screen_width = self.help_window.winfo_screenwidth()
+        screen_height = self.help_window.winfo_screenheight() - 50  # Adjust this value if needed
+
+        # Calculate the window size to avoid offset
+        window_width = screen_width
+        window_height = screen_height
+        x_position = 0
+        y_position = 0
+
+        # Set the geometry with calculated values
+        self.help_window.geometry(f'{window_width}x{window_height}+{x_position}+{y_position}')
+
 
 class HelpData:
     def __init__(self, root):
