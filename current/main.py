@@ -137,10 +137,6 @@ class JobDisplayApp:
     def show_data_help(self):
         HelpData(self.root)
 
-    def show_data_help(self):
-        """Show help related to data operations."""
-        HelpData(self.root)
-
     def load_state(self):
         """Load the saved state from a file."""
         try:
@@ -181,12 +177,14 @@ class JobDisplayApp:
                             self.tree.heading(col, text=col)
                             self.tree.column(col, anchor="w")
 
-                    self.refresh_view()
+                    self.initial_button_frame.pack_forget()
+                    self.warning_frame.pack_forget()
+                    self.file_help_button.pack_forget()
                     messagebox.showinfo('Success', 'Data restored successfully')
+                    self.refresh_view()
                     self.root.focus_force()
                     self.is_loaded_data = True
                     self.enable_buttons()
-                    self.initial_button_frame.pack_forget()
                 else:
                     messagebox.showerror('Error', 'Expected a dictionary with data keys')
                     self.root.focus_force()
@@ -340,7 +338,6 @@ class JobDisplayApp:
             self.tree.heading('delivery', text=CONST_DATA_ENTR)
 
             self.load_jobs()
-            self.enable_buttons()
             self.root.focus_force()
 
         except FileNotFoundError as fnf_error:
@@ -409,7 +406,10 @@ class JobDisplayApp:
             # Fill NaN values differently for numeric and non-numeric columns
             self.jobs_df = self.jobs_df.apply(lambda x: x.fillna(0) if x.dtype in ['float64', 'int64'] else x.fillna("-"))
 
+            self.warning_frame.pack_forget()
+            self.file_help_button.pack_forget()
             messagebox.showinfo('Success', 'Data imported from excel file successfully')
+            self.enable_buttons()
             self.refresh_view()
 
         except FileNotFoundError:
