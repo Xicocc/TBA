@@ -54,39 +54,12 @@ class HelpFile:
 
         # Center the window after it has been fully rendered to avoid top left flickering
         self.help_window.update_idletasks()
-        self.center_window_Add_Edit(self.help_window)  # Center the help window itself
+        center_window_File_Data(self.help_window)  # Center the help window itself
         self.help_window.deiconify()
 
         # Make sure the help window stays on top and disable interaction with the parent
         self.help_window.focus_set()
         self.help_window.grab_set()
-        
-    def center_window_Add_Edit(self, window):
-        window.update_idletasks()
-        width = 800
-        height = 450
-        screen_width = window.winfo_screenwidth() - 16
-        screen_height = window.winfo_screenheight() - 75
-        print(str(screen_width))
-        print(str(screen_height))
-        x = 0
-        y = 0
-        window.geometry(f'{screen_width}x{screen_height}+{x}+{y}')
-
-    def center_window(self):
-        # Get the screen width and height, subtracting 50 pixels from height for the taskbar
-        screen_width = self.help_window.winfo_screenwidth()
-        screen_height = self.help_window.winfo_screenheight() - 50  # Adjust this value if needed
-
-        # Calculate the window size to avoid offset
-        window_width = screen_width
-        window_height = screen_height
-        x_position = 0
-        y_position = 0
-
-        # Set the geometry with calculated values
-        self.help_window.geometry(f'{window_width}x{window_height}+{x_position}+{y_position}')
-
 
 class HelpData:
     def __init__(self, root):
@@ -96,14 +69,28 @@ class HelpData:
     def create_help_window(self):
         # Create a new Toplevel window
         self.help_window = tk.Toplevel(self.root)
-        self.help_window.title("Help - Data Operations")
+        self.help_window.title("Help - Data")
         
-        # Maximize the window to fill the screen
-        self.help_window.state('zoomed')  # This makes the window fill the screen
+        self.screen_width = self.root.winfo_screenwidth()
+        self.screen_height = self.root.winfo_screenheight()
+        self.help_window.geometry(f'{self.screen_width}x{self.screen_height}')
+        # Prevent resizing
+        self.help_window.resizable(False, False)
+        self.help_window.withdraw()  # Hide the window initially
+
+        # Set the HelpFile window to be on top of the parent window
+        self.help_window.transient(self.root)
+        self.help_window.grab_set()
 
         # Create a frame for better control of content layout
-        frame = tk.Frame(self.help_window)
-        frame.pack(expand=True, fill=tk.BOTH)
+        frame = tk.Frame(self.help_window, padx=20, pady=20)
+        frame.grid(row=0, column=0, sticky="nsew")
+
+        # Configure grid weights to allow resizing
+        self.help_window.grid_rowconfigure(0, weight=1)
+        self.help_window.grid_columnconfigure(0, weight=1)
+        frame.grid_rowconfigure(0, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
 
         # Create a Text widget with the help message
         help_message = """
@@ -132,32 +119,31 @@ class HelpData:
 
             !Lembre-se sempre de respeitar o formato da data de entrega!
         """
-        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20)
+        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20, height=20)  # Set a fixed height
         text_widget.insert(tk.END, help_message)
         text_widget.config(state=tk.DISABLED)  # Make text read-only
-        text_widget.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+        text_widget.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
 
         # Create a close button
-        close_button = tk.Button(frame, text="OK", font=('Arial', 20),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=5)
-        close_button.grid(row=2, column=0, pady=10)
-
-        # Configure row and column weights for expansion
-        frame.grid_rowconfigure(0, weight=1)
-        frame.grid_rowconfigure(1, weight=0)
-        frame.grid_rowconfigure(2, weight=0)
-        frame.grid_columnconfigure(0, weight=1)
-
-        # Keep the help window on top of the main window
-        self.help_window.transient(self.root)
-        self.help_window.grab_set()  # Capture all user input until the window is closed
+        close_button = tk.Button(frame, text="OK", font=('Arial', 18),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=1)
+        close_button.grid(row=1, column=0, pady=5, sticky='s')
 
         # Center the window after it has been fully rendered to avoid top left flickering
-        self.help_window.after_idle(self.center_window)
+        self.help_window.update_idletasks()
+        center_window_File_Data(self.help_window)  # Center the help window itself
+        self.help_window.deiconify()
 
-    def center_window(self):
-        width = self.help_window.winfo_screenwidth()
-        height = self.help_window.winfo_screenheight()
-        self.help_window.geometry(f'{width}x{height}+0+0')  # Adjust size and position
+        # Make sure the help window stays on top and disable interaction with the parent
+        self.help_window.focus_set()
+        self.help_window.grab_set()
+
+def center_window_File_Data( window):
+        window.update_idletasks()
+        screen_width = window.winfo_screenwidth() - 16
+        screen_height = window.winfo_screenheight() - 75
+        x = 0
+        y = 0
+        window.geometry(f'{screen_width}x{screen_height}+{x}+{y}')
 
 class HelpAdd:
     def __init__(self, root):
