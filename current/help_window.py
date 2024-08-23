@@ -116,8 +116,6 @@ class HelpData:
                     -  month:    (Mês do trabalho)
                     -  day:      (Dia do trabalho)
             Nota: Os filtro day:, month: e year: apenas são aplicáveis a entradas da tabela com valores de data.
-
-            !Lembre-se sempre de respeitar o formato da data de entrega!
         """
         text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20, height=20)  # Set a fixed height
         text_widget.insert(tk.END, help_message)
@@ -236,7 +234,7 @@ class HelpEdit:
             -  Quantidade
             -  Sector em que está
         
-        Caso queira adicionar um valor de data de entrega, lembre-se de respeitar sempre o formato da mesma!
+        Caso queira adicionar/editar um valor de data de entrega, lembre-se de respeitar sempre o formato da mesma!
         """
         text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20)
         text_widget.insert(tk.END, help_message)

@@ -9,13 +9,11 @@ from important_jobs_view import show_important_jobs, add_important_jobs_window, 
 import json_operations
 from constants import *
 from help_window import HelpFile, HelpData
-import time
-
-
-#Avoid any future incompatibilities by making sure it converts to future versions of panda
-pd.set_option('future.no_silent_downcasting', True)
 
 class JobDisplayApp:
+    #Avoid any future incompatibilities by making sure it converts to future versions of panda
+    pd.set_option('future.no_silent_downcasting', True)
+
     def __init__(self, root):
         self.root = root
         self.root.title("Job Display")
@@ -91,6 +89,7 @@ class JobDisplayApp:
         self.important_jobs_button = tk.Button(self.button_frame, text="Show Important Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
         self.close_all_button = tk.Button(self.button_frame, text="Close All Important Jobs Windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
         self.data_help_button = tk.Button(self.button_frame, text="Help", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_data_help)
+        self.reset_screen_button = tk.Button(self.button_frame, text="Back to files", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.reset_screen)
 
         self.add_job_button.pack(side=tk.LEFT, padx=5)
         self.edit_job_button.pack(side=tk.LEFT, padx=5)
@@ -98,6 +97,7 @@ class JobDisplayApp:
         self.important_jobs_button.pack(side=tk.LEFT, padx=5)
         self.close_all_button.pack(side=tk.LEFT, padx=5)
         self.data_help_button.pack(side=tk.LEFT, padx=5)
+        self.reset_screen_button.pack(side=tk.LEFT, padx=5, anchor='w')
 
         # Pack button_frame but keep it hidden initially
         self.button_frame.pack_forget()
@@ -130,6 +130,17 @@ class JobDisplayApp:
 
         # Bind the window close event
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def reset_screen(self):
+        """Reset to the initial main screen by creating a new instance of JobDisplayApp."""
+        # Destroy the current window
+        self.root.destroy()
+        
+        # Create a new root window
+        new_root = tk.Tk()
+        
+        # Initialize a new instance of JobDisplayApp
+        JobDisplayApp(new_root)
 
     def show_file_help(self):
         HelpFile(self.root)
