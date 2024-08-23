@@ -2,6 +2,7 @@ import tkinter as tk
 from datetime import datetime
 from date_placeholder import PlaceholderEntry
 from constants import *
+from help_window import HelpAdd
 
 class AddJobForm:
     def __init__(self, parent, add_callback):
@@ -42,6 +43,8 @@ class AddJobForm:
         save_button.grid(row=0, column=0, padx=3)
         cancel_button = tk.Button(button_frame, text="Cancel", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.cancel_job, width=10, height=1)
         cancel_button.grid(row=0, column=1, padx=3)
+        self.add_help_button = tk.Button(button_frame, text="Help", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_add_help)
+        self.add_help_button.grid(row=0, column=2, padx=3)
 
         self.top.geometry('600x400')  # Adjust size as needed
         self.top.update_idletasks()
@@ -52,6 +55,9 @@ class AddJobForm:
         self.top.focus_set()
         self.top.grab_set()
         self.parent.wait_window(self.top)  # Wait until this window is closed
+
+    def show_add_help(self):
+        HelpAdd(self.top)
 
     def center_window(self, window):
         window.update_idletasks()

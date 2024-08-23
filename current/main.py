@@ -9,6 +9,7 @@ from important_jobs_view import show_important_jobs, add_important_jobs_window, 
 import json_operations
 from constants import *
 from help_window import HelpFile, HelpData
+import time
 
 
 #Avoid any future incompatibilities by making sure it converts to future versions of panda
@@ -20,8 +21,6 @@ class JobDisplayApp:
         self.root.title("Job Display")
         self.root.state('zoomed')
         self.is_loaded_data = False
-        messagebox.showwarning('Warning', 'Não se esqueça de periodicamente apagar os ficheiros JSON criados no processo de salvamento :)')
-        self.root.focus_force()
 
         # Initialize data structures
         self.jobs_df = pd.DataFrame()
@@ -57,6 +56,18 @@ class JobDisplayApp:
         )
         self.file_help_button.pack(side=tk.BOTTOM, anchor='center', pady=10)
 
+        # Create warning frame and place it below the initial button frame
+        self.warning_frame = tk.Frame(root)
+        self.warning_frame.pack(pady=(10, 0), fill=tk.X)  # Place below initial_button_frame
+
+        # Create and show the warning label inside the warning frame
+        self.warning_label = tk.Label(
+            self.warning_frame, text="Não se esqueça de periodicamente apagar os ficheiros JSON criados :) \n"
+                + "Apenas apague os ficheiros que tem a certeza que não precisa.",
+            font=('SFPro', 17), wraplength=600
+        )
+        self.warning_label.pack(pady=10, anchor='center')  # Center the text in the frame
+
         # Add a "tag" label at the bottom right of the screen
         self.tag_label = tk.Label(
             root, text="Developed by Francisco Carvalho, 2024 \nAll rights reserved",
@@ -80,7 +91,6 @@ class JobDisplayApp:
         self.important_jobs_button = tk.Button(self.button_frame, text="Show Important Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
         self.close_all_button = tk.Button(self.button_frame, text="Close All Important Jobs Windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
         self.data_help_button = tk.Button(self.button_frame, text="Help", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_data_help)
-
 
         self.add_job_button.pack(side=tk.LEFT, padx=5)
         self.edit_job_button.pack(side=tk.LEFT, padx=5)
@@ -122,11 +132,9 @@ class JobDisplayApp:
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def show_file_help(self):
-        """Show help related to file loading."""
         HelpFile(self.root)
 
     def show_data_help(self):
-        """Show help related to file loading."""
         HelpData(self.root)
 
     def show_data_help(self):
@@ -296,6 +304,7 @@ class JobDisplayApp:
             self.select_file_button.pack_forget()
             self.load_state_button.pack_forget()
             self.cont_tag_label.place_forget()
+            self.warning_frame.pack_forget()
             self.tag_label.place_forget()
             self.file_help_button.pack_forget()
             self.search_label.master.pack(pady=10)
