@@ -10,6 +10,11 @@ class HelpFile:
         self.help_window = tk.Toplevel(self.root)
         self.help_window.title("Help - File Loading")
         
+        self.screen_width = self.root.winfo_screenwidth()
+        self.screen_height = self.root.winfo_screenheight()
+        self.help_window.geometry(f'{self.screen_width}x{self.screen_height}')
+        print(str(self.screen_width))
+        print(str(self.screen_height))
         # Prevent resizing
         self.help_window.resizable(False, False)
         self.help_window.withdraw()  # Hide the window initially
@@ -44,18 +49,29 @@ class HelpFile:
         text_widget.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
 
         # Create a close button
-        close_button = tk.Button(frame, text="OK", font=('Arial', 20),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=5)
-        close_button.grid(row=1, column=0, pady=10, sticky='s')
+        close_button = tk.Button(frame, text="OK", font=('Arial', 18),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=1)
+        close_button.grid(row=1, column=0, pady=5, sticky='s')
 
         # Center the window after it has been fully rendered to avoid top left flickering
         self.help_window.update_idletasks()
-        self.center_window()  # Center the help window itself
+        self.center_window_Add_Edit(self.help_window)  # Center the help window itself
         self.help_window.deiconify()
 
         # Make sure the help window stays on top and disable interaction with the parent
         self.help_window.focus_set()
         self.help_window.grab_set()
         
+    def center_window_Add_Edit(self, window):
+        window.update_idletasks()
+        width = 800
+        height = 450
+        screen_width = window.winfo_screenwidth() - 16
+        screen_height = window.winfo_screenheight() - 75
+        print(str(screen_width))
+        print(str(screen_height))
+        x = 0
+        y = 0
+        window.geometry(f'{screen_width}x{screen_height}+{x}+{y}')
 
     def center_window(self):
         # Get the screen width and height, subtracting 50 pixels from height for the taskbar
