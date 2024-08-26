@@ -105,7 +105,7 @@ class JobDisplayApp:
         self.close_all_button.pack_forget()  # Hide the close all important jobs button initially
 
         # Configure the Treeview style
-        self.tree_font = ('SFPro', 14)  # Set your desired font and size here
+        self.tree_font = ('SFPro', 15)  # Set your desired font and size here
         style = ttk.Style()
         style.configure("Treeview", font=self.tree_font, rowheight=int(self.tree_font[1] * 1.9))  # Adjust row height
         style.configure("Treeview.Heading", font=('SFPro', 16, 'bold'))
@@ -583,7 +583,7 @@ class JobDisplayApp:
 
     def adjust_column_widths(self):
         columns_with_average = ["CLIENTE", "DESCRIÇÃO DO TRABALHO"]
-        font = tkFont.Font()  # Default font
+        font = tkFont.Font(family=self.tree_font[0], size=self.tree_font[1])  # Use the same font as in your Treeview
 
         def get_text_width(text):
             return font.measure(text)
@@ -598,16 +598,13 @@ class JobDisplayApp:
             header_width = get_text_width(header_text)
             
             if col in columns_with_average:
-                # Calculate average width
                 avg_length = sum(get_text_width(value) for value in col_values) / len(col_values)
-                new_width = int(avg_length * 1.5)  # Adjust multiplier if needed
+                new_width = int(avg_length * 2)  # Adjust multiplier if needed
             else:
-                # Calculate max width
                 max_length = max(get_text_width(value) for value in col_values)
-                new_width = int(max_length * 1.5)  # Adjust multiplier if needed
+                new_width = int(max_length * 2)  # Adjust multiplier if needed
             
-            # Ensure width is an integer
-            final_width = max(new_width, int(header_width * 1.5))  # Ensure header fits
+            final_width = max(new_width, int(header_width * 2))  # Ensure header fits
             
             # Debug information
             print(f"Column: {col}")
@@ -615,7 +612,10 @@ class JobDisplayApp:
             print(f"New Width: {new_width}")
             print(f"Final Width: {final_width}")
             
+            # Set column width and force an update
             self.tree.column(col, width=final_width)
+            self.tree.update_idletasks()  # Force UI update to ensure changes are applied
+
 
     def open_edit_job_form(self):
         if self.selected_job_index is not None:
