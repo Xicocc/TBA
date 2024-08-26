@@ -597,19 +597,23 @@ class JobDisplayApp:
             header_text = self.tree.heading(col, 'text')
             header_width = get_text_width(header_text)
             
-            if col not in columns_with_average:
-                max_length = max(get_text_width(value) for value in col_values)
-                new_width = int(max_length * 2)  # Adjust multiplier if needed
-            else:
+            if col in columns_with_average:
+                # Calculate average width
                 avg_length = sum(get_text_width(value) for value in col_values) / len(col_values)
                 new_width = int(avg_length * 1.5)  # Adjust multiplier if needed
+            else:
+                # Calculate max width
+                max_length = max(get_text_width(value) for value in col_values)
+                new_width = int(max_length * 1.5)  # Adjust multiplier if needed
             
-            final_width = max(new_width, int(header_width * 1.5))
-
-            print("coluna : " + str(col))
-            print("header text width" + str(header_width) + ", *1.5 =" + str(int(header_width * 1.5)))
-            print("new width :" + str(new_width))
-            print("final widht" + str(final_width))
+            # Ensure width is an integer
+            final_width = max(new_width, int(header_width * 1.5))  # Ensure header fits
+            
+            # Debug information
+            print(f"Column: {col}")
+            print(f"Header Width: {header_width}")
+            print(f"New Width: {new_width}")
+            print(f"Final Width: {final_width}")
             
             self.tree.column(col, width=final_width)
 
