@@ -156,23 +156,25 @@ class JobDisplayApp:
         try:
             data = json_operations.load_json_file()
             if data:
-                if isinstance(data, dict):
+                if isinstance(data, dict) and 'data' in data:
+                    loaded_data = data['data']
+
                     # Load jobs_df
-                    if 'jobs_df' in data:
-                        self.jobs_df = pd.DataFrame(data['jobs_df'])
+                    if 'jobs_df' in loaded_data:
+                        self.jobs_df = pd.DataFrame(loaded_data['jobs_df'])
                     else:
-                        messagebox.showerror('Error', 'Missing jobs_df data')
+                        messagebox.showerror('Error', 'Missing data (data1)')
                         self.root.focus_force()
                         return
 
                     # Load added_jobs_df
-                    if 'added_jobs_df' in data:
-                        self.added_jobs_df = pd.DataFrame(data['added_jobs_df'])
+                    if 'added_jobs_df' in loaded_data:
+                        self.added_jobs_df = pd.DataFrame(loaded_data['added_jobs_df'])
                         if self.added_jobs_df.empty:
                             # Reinitialize with the correct columns if loaded DataFrame is empty
                             self.added_jobs_df = pd.DataFrame(columns=[CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR])
                     else:
-                        messagebox.showerror('Error', 'Missing added_jobs_df data')
+                        messagebox.showerror('Error', 'Missing data (data2)')
                         self.root.focus_force()
                         return
 
@@ -184,7 +186,7 @@ class JobDisplayApp:
                     self.tree['columns'] = list(self.jobs_df.columns)
                     for col in self.tree['columns']:
                         if col == ORI_CONST_SECTOR:
-                            #Change the column name in treeview from 'SECTOR EM QUE ESTÁ' to 'SECTOR' for consistency
+                            # Change the column name in treeview from 'SECTOR EM QUE ESTÁ' to 'SECTOR' for consistency
                             self.tree.heading(col, text='SECTOR')
                             self.tree.column(col, anchor="w")
                         else:
@@ -222,21 +224,27 @@ class JobDisplayApp:
         """Handle the window closing event."""
         try:
             if self.is_loaded_data:
-                result = messagebox.askyesno("Save State", "Do you want to save the current state?")
+                result = messagebox.askyesno("Save State", "Do you want to save the current data state?")
                 self.root.focus_force()
 
                 if result:
+                    # Unified dictionary with nested dictionaries for each DataFrame
                     state = {
-                        'added_jobs_df': self.added_jobs_df.to_dict(orient='records'),
-                        'jobs_df': self.jobs_df.to_dict(orient='records')
+                        'data': {
+                            'jobs_df': self.jobs_df.to_dict(orient='records'),
+                            'added_jobs_df': self.added_jobs_df.to_dict(orient='records')
+                        }
                     }
-                    for job in state['added_jobs_df']:
+
+                    # Process the date entries in 'added_jobs_df'
+                    for job in state['data']['added_jobs_df']:
                         if job[CONST_DATA_ENTR] == 'DD/MM/YYYY_HH:MM':
                             job[CONST_DATA_ENTR] = '-'
+
                     if json_operations.save_json_file(state):
-                        messagebox.showinfo("Info", "State saved successfully")
+                        messagebox.showinfo("Info", "State saved successfully.\nThe application will close now.")
                     else:
-                        messagebox.showerror("Error", "Failed to save state. The application will not close.")
+                        messagebox.showerror("Error", "Failed to save state.\nThe application will not close.")
                         self.root.focus_force()
                         return
                 self.root.destroy()
