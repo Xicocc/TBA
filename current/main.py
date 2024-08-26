@@ -583,10 +583,6 @@ class JobDisplayApp:
 
     def adjust_column_widths(self):
         columns_with_average = ["CLIENTE", "DESCRIÇÃO DO TRABALHO"]
-        font = tkFont.Font(family=self.tree_font[0], size=self.tree_font[1])  # Use the same font as in your Treeview
-
-        def get_text_width(text):
-            return font.measure(text)
         
         for col in self.tree['columns']:
             col_values = [self.tree.heading(col, 'text')] + [
@@ -594,28 +590,16 @@ class JobDisplayApp:
                 for child in self.tree.get_children()
             ]
             
-            header_text = self.tree.heading(col, 'text')
-            header_width = get_text_width(header_text)
-            
-            if col in columns_with_average:
-                avg_length = sum(get_text_width(value) for value in col_values) / len(col_values)
-                new_width = int(avg_length * 2)  # Adjust multiplier if needed
-            else:
-                max_length = max(get_text_width(value) for value in col_values)
-                new_width = int(max_length * 2)  # Adjust multiplier if needed
-            
-            final_width = max(new_width, int(header_width * 2))  # Ensure header fits
+            avg_length = max(len(col_values[0]), sum(len(value) for value in col_values[1:]) / len(col_values[1: ]))
+            new_width = int(avg_length) * 7
             
             # Debug information
             print(f"Column: {col}")
-            print(f"Header Width: {header_width}")
+            print(str(col_values))
             print(f"New Width: {new_width}")
-            print(f"Final Width: {final_width}")
             
-            # Set column width and force an update
-            self.tree.column(col, width=final_width)
-            self.tree.update_idletasks()  # Force UI update to ensure changes are applied
-
+            # Set column width
+            self.tree.column(col, width=new_width)
 
     def open_edit_job_form(self):
         if self.selected_job_index is not None:
