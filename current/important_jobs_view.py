@@ -329,9 +329,16 @@ class ImportantJobsWindow:
         try:
             if self.on_close_callback:
                 self.on_close_callback()
+
+            # Unbind the mouse wheel events
+            self.canvas.unbind_all("<MouseWheel>")
+            self.canvas.unbind_all("<Button-4>")
+            self.canvas.unbind_all("<Button-5>")
+
             # Remove the reference from the open_windows list
             global open_windows
             open_windows = [win for win in open_windows if win.window != self.window]
+            
             self.window.destroy()
             self.window = None
         except Exception as e:

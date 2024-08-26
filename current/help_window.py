@@ -13,8 +13,7 @@ class HelpFile:
         self.screen_width = self.root.winfo_screenwidth()
         self.screen_height = self.root.winfo_screenheight()
         self.help_window.geometry(f'{self.screen_width}x{self.screen_height}')
-        print(str(self.screen_width))
-        print(str(self.screen_height))
+        
         # Prevent resizing
         self.help_window.resizable(False, False)
         self.help_window.withdraw()  # Hide the window initially

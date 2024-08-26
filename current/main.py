@@ -132,15 +132,17 @@ class JobDisplayApp:
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def reset_screen(self):
-        """Reset to the initial main screen by creating a new instance of JobDisplayApp."""
-        # Destroy the current window
-        self.root.destroy()
-        
-        # Create a new root window
-        new_root = tk.Tk()
-        
-        # Initialize a new instance of JobDisplayApp
-        JobDisplayApp(new_root)
+        response = messagebox.askyesno("Confirm", "Are you sure you want to go back to the main screen? All progress will be lost.")
+        if response:
+            """Reset to the initial main screen by creating a new instance of JobDisplayApp."""
+            # Destroy the current window
+            self.root.destroy()
+            
+            # Create a new root window
+            new_root = tk.Tk()
+            
+            # Initialize a new instance of JobDisplayApp
+            JobDisplayApp(new_root)
 
     def show_file_help(self):
         HelpFile(self.root)
