@@ -106,7 +106,7 @@ class JobDisplayApp:
         # Configure the Treeview style
         self.tree_font = ('SFPro', 14)  # Set your desired font and size here
         style = ttk.Style()
-        style.configure("Treeview", font=self.tree_font, rowheight=int(self.tree_font[1] * 1.5))  # Adjust row height
+        style.configure("Treeview", font=self.tree_font, rowheight=int(self.tree_font[1] * 1.9))  # Adjust row height
         style.configure("Treeview.Heading", font=('SFPro', 16, 'bold'))
 
         # Create an empty Treeview
