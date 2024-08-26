@@ -597,12 +597,6 @@ class JobDisplayApp:
                 avg_length = max(len(col_values[0]), sum(len(value) for value in col_values[1:]) / len(col_values[1: ]))
                 new_width = int(avg_length) * 5
             
-            # Debug information
-            print(f"Column: {col}")
-            print("column name len :" + str(len(col_values[0])))
-            print(str(col_values))
-            print(f"New Width: {new_width}")
-            
             # Set column width
             self.tree.column(col, width=new_width)
 
