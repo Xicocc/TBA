@@ -581,10 +581,34 @@ class JobDisplayApp:
             messagebox.showerror("Error", f"Failed to refresh view: {e}. Please try closing and reopening the app :)")
 
     def adjust_column_widths(self):
+        # Specify the columns to apply the average width method
+        columns_with_average = ["CLIENTE", "DESCRIÇÃO DO TRABALHO"]
+        
         for col in self.tree['columns']:
-            col_values = [self.tree.heading(col, 'text')] + [str(self.tree.item(child)['values'][self.tree['columns'].index(col)]) for child in self.tree.get_children()]
-            max_length = max(len(value) for value in col_values)
-            self.tree.column(col, width=max_length * 5)
+            col_values = [self.tree.heading(col, 'text')] + [
+                str(self.tree.item(child)['values'][self.tree['columns'].index(col)]) 
+                for child in self.tree.get_children()
+            ]
+            
+            # Get the width of the column header
+            header_width = int(len(self.tree.heading(col, 'text')))
+            
+            if col in columns_with_average:
+                # Calculate the average length of the values in the column
+                avg_length = sum(len(value) for value in col_values) / len(col_values)
+                # Set the column width based on the average length
+                header_width = int(header_width * 1.5)
+                new_width = int(avg_length * 5)
+            else:
+                # Use the previous method to adjust based on the maximum length
+                max_length = max(len(value) for value in col_values)
+                new_width = int(max_length * 5)
+            
+            # Ensure the new width is not less than the header width
+            final_width = max(new_width, header_width * 5)
+            
+            # Set the column width
+            self.tree.column(col, width=final_width)
 
     def open_edit_job_form(self):
         if self.selected_job_index is not None:
