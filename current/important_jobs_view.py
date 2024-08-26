@@ -278,10 +278,15 @@ class ImportantJobsWindow:
         job_frame.pack(padx=5, pady=10, fill='x', expand=False, anchor='center')
         return job_frame
 
+    def custom_shorten(self, text, width, placeholder):
+        if len(text) > width:
+            return text[:width - len(placeholder)] + placeholder
+        return text
+
     def create_details_text(self, job):
         """Create and return the details text for a job."""
-        descr_text = shorten(job[ORI_CONST_DESC], width=60, placeholder="...")
-        client_text = shorten(job[CONST_CLIENTE], width=35, placeholder="...")
+        descr_text = self.custom_shorten(job[ORI_CONST_DESC], 50, "...")
+        client_text = self.custom_shorten(job[CONST_CLIENTE], 30, "...")
         return f"{job[CONST_SACO]}  |  {client_text}  |  {descr_text}  |  {job[CONST_QUANT]}  |  {job[ORI_CONST_SECTOR]}"
 
     def create_entrega_text(self, job):
