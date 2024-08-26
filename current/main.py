@@ -79,13 +79,13 @@ class JobDisplayApp:
             font=('SFPro', 8), fg="gray"
         )
         # Use place() to position the label at the bottom left corner
-        self.cont_tag_label.place(relx=0.0, rely=1.0, anchor='sw', x=10, y=-18)
+        self.cont_tag_label.place(relx=0.0, rely=1.0, anchor='sw', x=10, y=-19)
 
         # Create button frame and buttons
         self.button_frame = tk.Frame(root)
-        self.add_job_button = tk.Button(self.button_frame, text="Add New Job", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_add_job_form, state=tk.DISABLED)
-        self.edit_job_button = tk.Button(self.button_frame, text="Edit Job", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_edit_job_form, state=tk.DISABLED)
-        self.delete_job_button = tk.Button(self.button_frame, text="Delete Job", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_delete_job_form, state=tk.DISABLED)
+        self.add_job_button = tk.Button(self.button_frame, text="Add New Job", font=('SFPro', 15), fg='green', pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_add_job_form, state=tk.DISABLED)
+        self.edit_job_button = tk.Button(self.button_frame, text="Edit Job", font=('SFPro', 15), fg='#2f73b4',pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_edit_job_form, state=tk.DISABLED)
+        self.delete_job_button = tk.Button(self.button_frame, text="Delete Job", font=('SFPro', 15), fg='red',pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_delete_job_form, state=tk.DISABLED)
         self.important_jobs_button = tk.Button(self.button_frame, text="Show Important Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
         self.close_all_button = tk.Button(self.button_frame, text="Close All Important Jobs Windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
         self.data_help_button = tk.Button(self.button_frame, text="Help", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_data_help)
