@@ -1,5 +1,6 @@
 import json
 import tkinter as tk
+import tkinter.font as tkFont
 from tkinter import ttk, filedialog, messagebox
 import pandas as pd
 from add_job_form import AddJobForm
@@ -581,8 +582,11 @@ class JobDisplayApp:
             messagebox.showerror("Error", f"Failed to refresh view: {e}. Please try closing and reopening the app :)")
 
     def adjust_column_widths(self):
-        # Specify the columns to apply the average width method
         columns_with_average = ["CLIENTE", "DESCRIÇÃO DO TRABALHO"]
+        font = tkFont.Font()  # Default font
+
+        def get_text_width(text):
+            return font.measure(text)
         
         for col in self.tree['columns']:
             col_values = [self.tree.heading(col, 'text')] + [
@@ -590,24 +594,19 @@ class JobDisplayApp:
                 for child in self.tree.get_children()
             ]
             
-            # Get the width of the column header
-            header_width = int(len(self.tree.heading(col, 'text')))
+            header_text = self.tree.heading(col, 'text')
+            header_width = get_text_width(header_text)
             
             if col in columns_with_average:
-                # Calculate the average length of the values in the column
-                avg_length = sum(len(value) for value in col_values) / len(col_values)
-                # Set the column width based on the average length
-                header_width = int(header_width * 1.5)
-                new_width = int(avg_length * 5)
+                avg_length = sum(get_text_width(value) for value in col_values) / len(col_values)
+                new_width = int(avg_length * 1.5)  # Adjust multiplier if needed
             else:
-                # Use the previous method to adjust based on the maximum length
-                max_length = max(len(value) for value in col_values)
-                new_width = int(max_length * 5)
+                max_length = max(get_text_width(value) for value in col_values)
+                new_width = int(max_length * 1.5)  # Adjust multiplier if needed
             
-            # Ensure the new width is not less than the header width
-            final_width = max(new_width, header_width * 5)
+            # Ensure width is an integer
+            final_width = max(new_width, int(header_width * 1.5))  # Adjust multiplier if needed
             
-            # Set the column width
             self.tree.column(col, width=final_width)
 
     def open_edit_job_form(self):
