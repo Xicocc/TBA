@@ -79,7 +79,7 @@ class JobDisplayApp:
             font=('SFPro', 8), fg="gray"
         )
         # Use place() to position the label at the bottom left corner
-        self.cont_tag_label.place(relx=0.0, rely=1.0, anchor='sw', x=10, y=-19)
+        self.cont_tag_label.place(relx=0.0, rely=1.0, anchor='sw', x=10, y=-20)
 
         # Create button frame and buttons
         self.button_frame = tk.Frame(root)
