@@ -146,7 +146,7 @@ class ImportantJobsWindow:
             format_label = tk.Label(self.dummy_frame, text="FORMAT :", font=("SFPro", 14, 'bold'), anchor='center')
             format_label.pack(pady=0)  # Adjust vertical padding here
 
-            format_details_label = tk.Label(self.dummy_frame, text="SACO | CLIENTE | DESCRIÇÃO | QUANTIDADE | SECTOR", font=("SFPro", 16), anchor='center', fg='#2f73b4')
+            format_details_label = tk.Label(self.dummy_frame, text="SACO | CLIENTE | DESCRIÇÃO | QUANTIDADE | SECTOR/TAREFA", font=("SFPro", 16), anchor='center', fg='#2f73b4')
             format_details_label.pack(pady=0)  # Adjust vertical padding here
 
             entrega_label = tk.Label(self.dummy_frame, text="ENTREGA", font=("SFPro", 16), anchor='center', fg='#2f73b4')
