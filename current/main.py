@@ -1,6 +1,5 @@
 import json
 import tkinter as tk
-import tkinter.font as tkFont
 from tkinter import ttk, filedialog, messagebox
 import pandas as pd
 from add_job_form import AddJobForm
@@ -182,6 +181,9 @@ class JobDisplayApp:
                     self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_URG, CONST_URG, regex=False)
                     self.added_jobs_df.columns = self.added_jobs_df.columns.str.replace(ORI_CONST_URG, CONST_URG, regex=False)
 
+                    self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_DESC, CONST_DESC, regex=False)
+                    self.added_jobs_df.columns = self.added_jobs_df.columns.str.replace(ORI_CONST_DESC, CONST_DESC, regex=False)
+
                     # Set up Treeview columns
                     self.tree['columns'] = list(self.jobs_df.columns)
                     for col in self.tree['columns']:
@@ -352,7 +354,7 @@ class JobDisplayApp:
             self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
             self.tree.heading('job_id', text=CONST_SACO)
             self.tree.heading('client', text=CONST_CLIENTE)
-            self.tree.heading('description', text='DESCRIÇÃO')
+            self.tree.heading('description', text=CONST_DESC)
             self.tree.heading('quantity', text=CONST_QUANT)
             self.tree.heading('sector', text='SECTOR')
             self.tree.heading('state', text=CONST_ESTADO)
@@ -481,7 +483,7 @@ class JobDisplayApp:
 
     def filter_data(self, df, query):
         """Filter the DataFrame based on the search query."""
-        
+
         # Initialize the filtered DataFrame
         filtered_df = df.copy()
 
@@ -597,15 +599,25 @@ class JobDisplayApp:
                 str(self.tree.item(child)['values'][self.tree['columns'].index(col)]) 
                 for child in self.tree.get_children()
             ]
-            
-            if col in column_exc:
-                avg_length = max(int(len(col_values[0]) * 2), sum(len(value) for value in col_values[1:]) / len(col_values[1: ]))
-                new_width = int(avg_length) * 5
+
+            # Check if col_values is not empty to avoid division by zero
+            if len(col_values) > 1:
+                # Calculate the average length based on the exclusion list
+                if col in column_exc:
+                    avg_length = max(int(len(col_values[0]) * 2), sum(len(value) for value in col_values[1:]) / max(1, len(col_values[1:])))
+                else:
+                    avg_length = max(len(col_values[0]), sum(len(value) for value in col_values[1:]) / max(1, len(col_values[1:])))
             else:
-                avg_length = max(len(col_values[0]), sum(len(value) for value in col_values[1:]) / len(col_values[1: ]))
-                new_width = int(avg_length) * 5
-            
-            # Set column width
+                avg_length = len(col_values[0])
+
+            # Set the new width based on calculated average length
+            new_width = int(avg_length) * 5
+
+            # Ensure the width is at least as wide as the column header text
+            min_width = len(self.tree.heading(col, 'text')) * 5
+            new_width = max(new_width, min_width)
+
+            # Set the column width
             self.tree.column(col, width=new_width)
 
     def open_edit_job_form(self):
