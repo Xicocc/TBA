@@ -600,7 +600,7 @@ class JobDisplayApp:
                 for child in self.tree.get_children()
             ]
 
-            # Check if col_values is not empty to avoid division by zero
+            # Check if col_values is not empty to avoid division by zero (when user filters and there's nothing to display)
             if len(col_values) > 1:
                 # Calculate the average length based on the exclusion list
                 if col in column_exc:
