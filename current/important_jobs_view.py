@@ -18,7 +18,7 @@ class ImportantJobsWindow:
     def __init__(self, parent, jobs_df, num_jobs, on_close_callback=None):
         try:
             self.window = tk.Toplevel(parent)
-            self.window.title("Important Jobs")
+            self.window.title("jBxCC")
             self.window.update_idletasks()
             self.window.state('zoomed')
 

@@ -78,7 +78,7 @@ class AddJobForm:
             job[CONST_DATA_ENTR] = '-'
 
         # Fields that are required
-        required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_DATA_ENTR]
+        required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR]
 
         # Check if any required fields are empty
         missing_fields = [field for field in required_fields if not job[field].strip()]
@@ -95,7 +95,7 @@ class AddJobForm:
         # Replace empty fields with "-"
         for field in job:
             if not job[field].strip():
-                job[field] = " - "
+                job[field] = "-"
         # If all validations pass, proceed to add the job and close the form
         self.add_callback(job)
         self.top.grab_release()  # Release the grab before destroying the window
@@ -106,7 +106,7 @@ class AddJobForm:
         self.top.destroy()
 
     def validate_datetime(self, datetime_str):
-        if datetime_str == '-':
+        if datetime_str == '-' or datetime_str == '':
             return True
         try:
             datetime.strptime(datetime_str, DATE_FORMAT)

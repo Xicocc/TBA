@@ -73,32 +73,41 @@ class EditJobForm:
 
     def save_job(self):
         job = {field: entry.get() for field, entry in self.fields.items()}
-        if self.validate_datetime(job[CONST_DATA_ENTR]):
-            # Fields that are required
-            required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR]
+        
+        # Check if the date field has the placeholder or is empty
+        if job[CONST_DATA_ENTR] == "DD/MM/YYYY_HH:MM" or not job[CONST_DATA_ENTR].strip():
+            job[CONST_DATA_ENTR] = "-"  # Replace with "-"
 
-            # Check if any required fields are empty
-            missing_fields = [field for field in required_fields if not job[field].strip()]
-            if missing_fields:
-                tk.messagebox.showerror("Missing Information", f"The following fields are required: {', '.join(missing_fields)}")
-                return  # Stop the save process if required fields are missing
-            else :
-                # Replace empty fields with "-"
-                for field in job:
-                    if not job[field].strip():
-                        job[field] = " - "
-                self.update_callback(job)
-                self.top.grab_release()  # Release the grab before destroying the window
-                self.top.destroy()
-        else:
+        # Validate the date field only if it's not set to "-"
+        if job[CONST_DATA_ENTR] != "-" and not self.validate_datetime(job[CONST_DATA_ENTR]):
             tk.messagebox.showerror("Invalid Input", "The date/time format is incorrect. Please use DD/MM/YYYY_HH:MM format.")
+            return  # Stop the save process if the date is invalid
+        
+        # Fields that are required
+        required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR]
+
+        # Check if any required fields are empty
+        missing_fields = [field for field in required_fields if not job[field].strip()]
+        if missing_fields:
+            tk.messagebox.showerror("Missing Information", f"The following fields are required: {', '.join(missing_fields)}")
+            return  # Stop the save process if required fields are missing
+        
+        # Replace any remaining empty fields with "-"
+        for field in job:
+            if not job[field].strip():
+                job[field] = "-"
+        
+        self.update_callback(job)
+        self.top.grab_release()  # Release the grab before destroying the window
+        self.top.destroy()
+
 
     def cancel_edit(self):
         self.top.grab_release()  # Release the grab before destroying the window
         self.top.destroy()
 
     def validate_datetime(self, datetime_str):
-        if datetime_str == "DD/MM/YYYY_HH:MM" or datetime_str == '':
+        if datetime_str == "DD/MM/YYYY_HH:MM" or datetime_str == '' or datetime_str == "-":
             return True
         try:
             datetime.strptime(datetime_str, DATE_FORMAT)
