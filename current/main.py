@@ -34,7 +34,7 @@ class JobDisplayApp:
 
         # Create select file button
         self.select_file_button = tk.Button(
-            self.initial_button_frame, text="Load File",
+            self.initial_button_frame, text="Load Excel",
             font=('SFPro', 20), pady=5, borderwidth=2, relief=tk.RIDGE,
             command=self.load_file)
         self.select_file_button.pack(side=tk.LEFT, padx=5)
