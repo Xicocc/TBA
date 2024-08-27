@@ -285,7 +285,7 @@ class ImportantJobsWindow:
 
     def create_details_text(self, job):
         """Create and return the details text for a job."""
-        descr_text = self.custom_shorten(job[ORI_CONST_DESC], 50, "...")
+        descr_text = self.custom_shorten(job[CONST_DESC], 50, "...")
         client_text = self.custom_shorten(job[CONST_CLIENTE], 30, "...")
         return f"{job[CONST_SACO]}  |  {client_text}  |  {descr_text}  |  {job[CONST_QUANT]}  |  {job[ORI_CONST_SECTOR]}"
 
