@@ -16,7 +16,7 @@ class JobDisplayApp:
 
     def __init__(self, root):
         self.root = root
-        self.root.title("jBxCCs")
+        self.root.title("jBxCC")
         self.root.state('zoomed')
         self.is_loaded_data = False
 

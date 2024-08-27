@@ -143,13 +143,13 @@ class ImportantJobsWindow:
                 self.dummy_frame.pack(fill='x', padx=0, pady=0)  # Adjust padding here
 
             # Create the format label in the dummy frame
-            format_label = tk.Label(self.dummy_frame, text="FORMAT :", font=("Arial", 14, 'bold'), anchor='center')
+            format_label = tk.Label(self.dummy_frame, text="FORMAT :", font=("SFPro", 14, 'bold'), anchor='center')
             format_label.pack(pady=0)  # Adjust vertical padding here
 
-            format_details_label = tk.Label(self.dummy_frame, text="SACO | CLIENTE | DESCRIÇÃO | QUANTIDADE | SECTOR", font=("Arial", 16), anchor='center', fg='#2f73b4')
+            format_details_label = tk.Label(self.dummy_frame, text="SACO | CLIENTE | DESCRIÇÃO | QUANTIDADE | SECTOR", font=("SFPro", 16), anchor='center', fg='#2f73b4')
             format_details_label.pack(pady=0)  # Adjust vertical padding here
 
-            entrega_label = tk.Label(self.dummy_frame, text="ENTREGA", font=("Arial", 16), anchor='center', fg='#2f73b4')
+            entrega_label = tk.Label(self.dummy_frame, text="ENTREGA", font=("SFPro", 16), anchor='center', fg='#2f73b4')
             entrega_label.pack(pady=0)  # Adjust vertical padding here
 
             self.update_display()
@@ -223,7 +223,7 @@ class ImportantJobsWindow:
 
     def display_no_jobs_message(self):
         """Display a message when there are no important jobs."""
-        tk.Label(self.scrollable_frame, text="No important jobs to display.", font=("Arial", 18)).pack(padx=20, pady=20)
+        tk.Label(self.scrollable_frame, text="No important jobs to display.", font=("SFPro", 18)).pack(padx=20, pady=20)
 
     def get_text_width(self, text, font_name, font_size):
         """
@@ -236,7 +236,7 @@ class ImportantJobsWindow:
         """Calculate padding and wraplength based on job text lengths."""
         text_widths = []
         padx_values = []
-        font_name = "Arial"
+        font_name = "SFPro"
         font_size = 18
 
         for _, job in jobs.iterrows():
@@ -300,8 +300,8 @@ class ImportantJobsWindow:
         details_frame = tk.Frame(job_frame, bg="lightgray", width=self.fixed_width, padx=10, pady=5)
         details_frame.pack(fill='x', expand=False, padx=avg_padx_value, anchor='center')
 
-        tk.Label(details_frame, text=details_text, font=("Arial", font_size), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
-        tk.Label(details_frame, text=entrega_text, font=("Arial", font_size), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
+        tk.Label(details_frame, text=details_text, font=("SFPro", font_size), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
+        tk.Label(details_frame, text=entrega_text, font=("SFPro", font_size), fg=text_color, bg="lightgray", wraplength=avg_wraplength, anchor='w').pack(pady=1)
 
     def update_canvas(self):
         """Update the canvas and scroll region."""

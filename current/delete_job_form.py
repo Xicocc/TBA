@@ -18,15 +18,15 @@ class DeleteJobForm:
         frame = tk.Frame(self.top, padx=20, pady=20)
         frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
 
-        tk.Label(frame, text="Delete Job", font=('Arial', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
+        tk.Label(frame, text="Delete Job", font=('SFPro', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         # Display job details
         details_frame = tk.Frame(frame)
         details_frame.grid(row=1, column=0, columnspan=2, pady=(0, 10))
 
         for idx, (field, value) in enumerate(self.job.items()):
-            tk.Label(details_frame, text=field, width=25, anchor='w', font=('Arial', 21)).grid(row=idx, column=0, sticky='w', pady=5)
-            tk.Label(details_frame, text=value, width=50, anchor='w', fg='white',bg='#1e1e1e', borderwidth=1, font=('Arial', 20)).grid(row=idx, column=1, sticky='ew', padx=5)
+            tk.Label(details_frame, text=field, width=25, anchor='w', font=('SFPro', 21)).grid(row=idx, column=0, sticky='w', pady=5)
+            tk.Label(details_frame, text=value, width=50, anchor='w', fg='white',bg='#1e1e1e', borderwidth=1, font=('SFPro', 20)).grid(row=idx, column=1, sticky='ew', padx=5)
 
         # Buttons
         button_frame = tk.Frame(frame)

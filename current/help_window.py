@@ -43,13 +43,13 @@ class HelpFile:
         O ficheiro excel submetido deve ter a formatação correta (A qual é do conhecimento dos colaboradores). \n
         O ficheiro JSON é gerado automaticamente no processo de salvamento do estado da aplicação e NÃO deve ser alterado manualmente, correndo o risco de corromper o mesmo.
         """
-        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20, height=20)  # Set a fixed height
+        text_widget = tk.Text(frame, wrap=tk.WORD, font=('SFPro', 18), padx=20, pady=20, height=20)  # Set a fixed height
         text_widget.insert(tk.END, help_message)
         text_widget.config(state=tk.DISABLED)  # Make text read-only
         text_widget.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
 
         # Create a close button
-        close_button = tk.Button(frame, text="OK", font=('Arial', 18),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=1)
+        close_button = tk.Button(frame, text="OK", font=('SFPro', 18),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=1)
         close_button.grid(row=1, column=0, pady=5, sticky='s')
 
         # Center the window after it has been fully rendered to avoid top left flickering
@@ -117,13 +117,13 @@ class HelpData:
                     -  day:      (Dia do trabalho)
             Nota: Os filtro day:, month: e year: apenas são aplicáveis a entradas da tabela com valores de data.
         """
-        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20, height=20)  # Set a fixed height
+        text_widget = tk.Text(frame, wrap=tk.WORD, font=('SFPro', 18), padx=20, pady=20, height=20)  # Set a fixed height
         text_widget.insert(tk.END, help_message)
         text_widget.config(state=tk.DISABLED)  # Make text read-only
         text_widget.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
 
         # Create a close button
-        close_button = tk.Button(frame, text="OK", font=('Arial', 18),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=1)
+        close_button = tk.Button(frame, text="OK", font=('SFPro', 18),command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=1)
         close_button.grid(row=1, column=0, pady=5, sticky='s')
 
         # Center the window after it has been fully rendered to avoid top left flickering
@@ -181,13 +181,13 @@ class HelpAdd:
         
         Caso queira adicionar um valor de data de entrega, lembre-se de respeitar sempre o formato da mesma!
         """
-        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20)
+        text_widget = tk.Text(frame, wrap=tk.WORD, font=('SFPro', 18), padx=20, pady=20)
         text_widget.insert(tk.END, help_message)
         text_widget.config(state=tk.DISABLED)  # Make text read-only
         text_widget.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
         # Create a close button
-        close_button = tk.Button(frame, text="OK", font=('Arial', 20), command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=5)
+        close_button = tk.Button(frame, text="OK", font=('SFPro', 20), command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=5)
         close_button.grid(row=1, column=0, pady=10, sticky="s")
 
         self.help_window.update_idletasks()
@@ -236,13 +236,13 @@ class HelpEdit:
         
         Caso queira adicionar/editar um valor de data de entrega, lembre-se de respeitar sempre o formato da mesma!
         """
-        text_widget = tk.Text(frame, wrap=tk.WORD, font=('Arial', 18), padx=20, pady=20)
+        text_widget = tk.Text(frame, wrap=tk.WORD, font=('SFPro', 18), padx=20, pady=20)
         text_widget.insert(tk.END, help_message)
         text_widget.config(state=tk.DISABLED)  # Make text read-only
         text_widget.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
         # Create a close button
-        close_button = tk.Button(frame, text="OK", font=('Arial', 20), command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=5)
+        close_button = tk.Button(frame, text="OK", font=('SFPro', 20), command=self.help_window.destroy, borderwidth=2, relief=tk.RIDGE, pady=5)
         close_button.grid(row=1, column=0, pady=10, sticky="s")
 
         self.help_window.update_idletasks()

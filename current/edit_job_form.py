@@ -21,17 +21,17 @@ class EditJobForm:
         frame = tk.Frame(self.top, padx=20, pady=20)
         frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
 
-        tk.Label(frame, text="Edit Job", font=('Arial', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
+        tk.Label(frame, text="Edit Job", font=('SFPro', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         # Form Fields
         self.fields = {}
         row = 1
         for field, value in job.items():
-            tk.Label(frame, text=field, width=25, anchor='w', font=('Arial', 21)).grid(row=row, column=0, sticky='w', pady=5)
+            tk.Label(frame, text=field, width=25, anchor='w', font=('SFPro', 21)).grid(row=row, column=0, sticky='w', pady=5)
             if field == CONST_DATA_ENTR and value == '-':
-                entry = PlaceholderEntry(frame, "DD/MM/YYYY_HH:MM", width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('Arial', 20))
+                entry = PlaceholderEntry(frame, "DD/MM/YYYY_HH:MM", width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('SFPro', 20))
             else:
-                entry = tk.Entry(frame, width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('Arial', 20))
+                entry = tk.Entry(frame, width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('SFPro', 20))
                 entry.insert(0, value)
             entry.grid(row=row, column=1, sticky='ew', padx=5)
             self.fields[field] = entry
