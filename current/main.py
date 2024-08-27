@@ -432,6 +432,11 @@ class JobDisplayApp:
 
             self.warning_frame.pack_forget()
             self.file_help_button.pack_forget()
+
+            # Standardize column names
+            self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_URG, CONST_URG, regex=False)
+            self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_DESC, CONST_DESC, regex=False)
+
             messagebox.showinfo('Success', 'Data imported from excel file successfully')
             self.enable_buttons()
             self.refresh_view()
