@@ -1,7 +1,6 @@
 import tkinter as tk
 import pandas as pd
 import platform
-import win32api
 from tkinter import simpledialog, messagebox
 from textwrap import shorten
 from tkinter import font
@@ -370,12 +369,24 @@ class CustomModalDialog(simpledialog.Dialog):
         
         # Attempt to set the default value based on the number of connected monitors
         try:
-            if (platform.system() == 'Darwin'):
-                num_monitors = len(get_monitors()) - 1
-            elif (platform.system() == 'Windows'):
-                num_monitors = len(win32api.EnumDisplayMonitors()) - 1
-            if(num_monitors == 0):
+            if platform.system() == 'Darwin':  # macOS
+                try:
+                    from screeninfo import get_monitors
+                    num_monitors = len(get_monitors()) - 1
+                except ImportError:
+                    num_monitors = 1  # Default to 1 if screeninfo is not available
+            elif platform.system() == 'Windows':  # Windows
+                try:
+                    import win32api
+                    num_monitors = len(win32api.EnumDisplayMonitors()) - 1
+                except ImportError:
+                    num_monitors = 1  # Default to 1 if win32api is not available
+            else:
+                num_monitors = 1  # Default for other platforms or if OS is unknown
+            
+            if num_monitors <= 0:
                 num_monitors = 1
+
         except Exception as e:
             num_monitors = 1  # Fallback to 1 if there's an error
             messagebox.showwarning("Monitor Detection Error", f"Could not detect monitors. Defaulting to 1 screen. Error: {e}")
