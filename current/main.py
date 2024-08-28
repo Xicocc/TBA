@@ -88,7 +88,6 @@ class JobDisplayApp:
         self.delete_job_button = tk.Button(self.button_frame, text="Delete Job", font=('SFPro', 15), fg='red',pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_delete_job_form, state=tk.DISABLED)
         self.important_jobs_button = tk.Button(self.button_frame, text="Show Important Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
         self.close_all_button = tk.Button(self.button_frame, text="Close All Important Jobs Windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
-        self.move_wind_button = tk.Button(self.button_frame, text="Move windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
         self.data_help_button = tk.Button(self.button_frame, text="Help", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_data_help)
         self.reset_screen_button = tk.Button(self.button_frame, text="Back to files", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.reset_screen)
 
@@ -97,14 +96,12 @@ class JobDisplayApp:
         self.delete_job_button.pack(side=tk.LEFT, padx=5)
         self.important_jobs_button.pack(side=tk.LEFT, padx=5)
         self.close_all_button.pack(side=tk.LEFT, padx=5)
-        self.move_wind_button.pack(side=tk.LEFT, padx=5)
         self.data_help_button.pack(side=tk.LEFT, padx=5)
         self.reset_screen_button.pack(side=tk.LEFT, padx=5, anchor='w')
 
         # Pack button_frame but keep it hidden initially
         self.button_frame.pack_forget()
         self.close_all_button.pack_forget()
-        self.move_wind_button.pack_forget()  # Hide the close all important jobs button initially
 
         # Configure the Treeview style
         self.tree_font = ('SFPro', 15)  # Set your desired font and size here
@@ -720,10 +717,10 @@ class JobDisplayApp:
         self.delete_job_button.configure(state=tk.DISABLED)
 
     def show_important_jobs(self):
-        show_important_jobs(self.root, self.jobs_df, self.added_jobs_df, self.important_jobs_button, self.close_all_button, self.move_wind_button)
+        show_important_jobs(self.root, self.jobs_df, self.added_jobs_df, self.important_jobs_button, self.close_all_button)
 
     def add_important_jobs_window(self):
-        add_important_jobs_window(self.root, self.jobs_df, self.added_jobs_df, self.important_jobs_button, self.close_all_button, self.move_wind_button)
+        add_important_jobs_window(self.root, self.jobs_df, self.added_jobs_df, self.important_jobs_button, self.close_all_button)
 
 if __name__ == "__main__":
     root = tk.Tk()
