@@ -2,10 +2,9 @@ import tkinter as tk
 import pandas as pd
 import platform
 from tkinter import simpledialog, messagebox
-from textwrap import shorten
+from screeninfo import get_monitors
 from tkinter import font
 from constants import *
-from monitor_manager import move_to_monitors
 
 
 # Global variables to track the state
@@ -17,14 +16,28 @@ jobs_df_update = pd.DataFrame()
 added_jobs_df_update = pd.DataFrame()
 last_displayed_sacos = []
 num_monitors = 0
+monitor_widths = []
+monitor_heights = []
+monitor_flag = False
 
 class ImportantJobsWindow:
     def __init__(self, parent, jobs_df, num_jobs, on_close_callback=None):
         try:
+            # Get the dimensions of the primary monitor
+            initial_width, initial_height = self.get_main_monitor_dimensions()
+
             self.window = tk.Toplevel(parent)
             self.window.title("jBxCC")
+
+            # Remove any previous geometry settings to ensure we start fresh
             self.window.update_idletasks()
-            self.window.state('zoomed')
+            self.window.geometry(f"{initial_width}x{initial_height}+0+0")
+
+            # Update to apply the geometry settings
+            self.window.update_idletasks()
+
+            # Adjust the window to account for decorations
+            self.adjust_window_for_decorations()
 
             self.canvas = tk.Canvas(self.window)
             self.canvas.pack(side='left', fill='both', expand=True)
@@ -53,6 +66,7 @@ class ImportantJobsWindow:
 
             self.update_display()
 
+            # Delay for focusing functions
             self.window.after(100, self.scroll_to_center)
             self.window.after(200, self.focus_and_raise)
 
@@ -60,13 +74,61 @@ class ImportantJobsWindow:
         except Exception as e:
             messagebox.showerror("Error", f"Error initializing Important Jobs window: {e}")
 
+    def adjust_window_for_decorations(self):
+        """Adjusts the window size and position to account for decorations."""
+        try:
+            # Get the window's current position
+            x = self.window.winfo_x()
+            y = self.window.winfo_y()
+
+            # Calculate the actual monitor size and adjust if necessary
+            monitor_width, monitor_height = self.get_main_monitor_dimensions()
+
+            if (monitor_width < 1920):
+                monitor_width = 1920
+            
+            if (monitor_height < 1080):
+                monitor_height = 1080
+
+            # Adjust the window size and position
+            self.window.geometry(f"{monitor_width}x{monitor_height}+{x}+{y}")
+            
+            # Ensure the window updates to the new size
+            self.window.update_idletasks()
+        except Exception as e:
+            messagebox.showerror("Error", f"Error adjusting window for decorations: {e}")
+
+    def get_main_monitor_dimensions(self):
+        """Gets the width and height of the main monitor."""
+        try:
+            if platform.system() == 'Windows':
+                import win32api
+                monitor_info = win32api.GetMonitorInfo(win32api.MonitorFromPoint((0, 0)))
+                monitor_area = monitor_info['Monitor']
+                width = monitor_area[2] - monitor_area[0]
+                height = monitor_area[3] - monitor_area[1]
+            else:  # For macOS and Linux, use screeninfo
+                from screeninfo import get_monitors
+                monitors = get_monitors()
+                primary_monitor = monitors[0]  # The first monitor is typically the primary one
+                width = primary_monitor.width
+                height = primary_monitor.height
+
+            return width, height
+        except Exception as e:
+            messagebox.showerror("Error", f"Error retrieving main monitor dimensions: {e}")
+
     def focus_and_raise(self):
         try:
             self.window.focus_set()  # Request focus
+            print(f"Geometry before lift: {self.window.geometry()}")  # Debug: Print geometry
+
             self.window.lift()  # Bring to the front
             self.window.attributes('-topmost', True)  # Set as topmost window
             self.window.attributes('-topmost', False)  # Reset topmost attribute
-            
+
+            print(f"Geometry after topmost reset: {self.window.geometry()}")  # Debug: Print geometry
+
             # Forcing the window to stay on top for a brief moment
             self.window.update_idletasks()
             self.window.after(100, lambda: self.window.attributes('-topmost', True))
@@ -74,8 +136,10 @@ class ImportantJobsWindow:
 
             # Ensure the window is not minimized
             self.window.deiconify()
+            print(f"Geometry after deiconify: {self.window.geometry()}")  # Debug: Print geometry
         except Exception as e:
             messagebox.showerror("Error", f"Error focusing and raising window: {e}")
+
 
     def on_frame_configure(self, event=None):
         try:
@@ -335,6 +399,7 @@ class ImportantJobsWindow:
             messagebox.showerror("Error", f"Error handling mouse wheel: {e}")
 
     def on_close(self):
+        global num_monitors, monitor_widths, monitor_height, monitor_flag
         try:
             if self.on_close_callback:
                 self.on_close_callback()
@@ -350,6 +415,13 @@ class ImportantJobsWindow:
             
             self.window.destroy()
             self.window = None
+
+            if (len(open_windows) == 0):
+                monitor_widths.clear()
+                monitor_heights.clear()
+                num_monitors = 0
+                monitor_flag = False
+
         except Exception as e:
             messagebox.showerror("Error", f"Error closing window: {e}")
 
@@ -441,9 +513,13 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
             move_win_button.pack(side=tk.LEFT, padx=5)
 
             def close_all_windows():
-                global num_windows
+                global num_windows, monitor_widths, num_monitors, monitor_heights, monitor_flag
                 try:
                     if messagebox.askokcancel("Confirm Close", "Are you sure you want to close all Important Jobs windows? \n\n You can re-open them later."):
+                        monitor_widths.clear()
+                        monitor_heights.clear()
+                        num_monitors = 0
+                        monitor_flag = False
                         while open_windows:  # Ensure all windows are closed
                             window = open_windows.pop()
                             window.window.destroy()
@@ -453,7 +529,11 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                     messagebox.showerror("Error", f"Error closing all windows: {e}")
 
             def move_windows():
-                move_to_monitors(open_windows)
+                global monitor_flag
+                if(not monitor_flag):
+                    move_to_monitors(open_windows)
+                else:
+                    messagebox.showinfo('Already done', 'Windows have already been moved!')
 
             close_all_button.config(command=close_all_windows)
             move_win_button.config(command=move_windows)
@@ -545,3 +625,81 @@ def refresh_all_windows():
         last_displayed_sacos = new_displayed_sacos
     except Exception as e:
         messagebox.showerror("Error", f"Error refreshing all windows: {e}")
+
+def get_monitor_dimensions():
+    """Gets the width and height of each monitor on the system."""
+    global monitor_widths, monitor_heights
+    
+    if platform.system() == 'Windows':
+        import win32api
+        # Enumerate all monitors
+        monitors = win32api.EnumDisplayMonitors()
+
+        # Loop through each monitor and get its dimensions
+        for i, monitor in enumerate(monitors):
+            monitor_info = win32api.GetMonitorInfo(monitor[0])  # Correct index usage
+            monitor_area = monitor_info['Monitor']
+            
+            # Calculate width and height
+            width = monitor_area[2] - monitor_area[0]
+            height = monitor_area[3] - monitor_area[1]
+            
+            print(f"Monitor {i + 1}: Width = {width} px, Height = {height} px")
+            monitor_widths.append(width)
+            monitor_heights.append(height)
+            
+    elif platform.system() == 'Darwin':
+        monitors = get_monitors()
+        
+        for monitor in monitors:
+            width = monitor.width
+            height = monitor.height
+            monitor_widths.append(width)
+            monitor_heights.append(height)
+
+    print(f"Monitor_widths : {monitor_widths}")
+    print(f"Number of monitors detected: {len(monitor_widths)}")
+
+def move_to_monitors(open_windows):
+    global monitor_widths, monitor_flag
+    # Call function to populate the information lists
+    get_monitor_dimensions()
+
+    """Moves each window to a specific monitor based on available monitors."""
+    if len(open_windows) < len(monitor_widths) - 1:
+        messagebox.showerror(
+            'Not enough windows',
+            'The number of Important Job Windows is smaller than the number of monitors available. Please open more windows to match the number of monitors.'
+        )
+        return
+        
+    # Function to calculate the x-coordinate based on monitor widths
+    def get_x_coordinate(monitor_index):
+        return sum(monitor_widths[:monitor_index + 1])  # Sum all previous monitor widths
+
+    # Move each window to the respective monitor
+    for i, job_window in enumerate(open_windows):
+        if i >= len(monitor_widths) - 1:  # Ensure we don't exceed available monitors
+            return
+            
+        print(f"Moving window {i} to monitor {i}")
+            
+        # Get current window size from the `window` attribute of `ImportantJobsWindow`
+        current_width = monitor_widths[i+1]  # Access through `self.window`
+        current_height = monitor_heights[i+1]
+            
+        print (f"Monitor_widths state before calculating offset : {monitor_widths}")
+
+        # Calculate new position
+        x = get_x_coordinate(i)
+        if (x < 1920):
+            x = 1920
+        y = 0  # Start at the top of the screen; adjust if needed
+            
+        # Update window geometry without changing its size
+        job_window.window.geometry(f"{current_width}x{current_height}+{x - 10}+{y}")
+
+        monitor_flag = True
+
+        print(f"Offset (x coordinate) to move : {x}")
+        print(f"Successfully moved the window")
