@@ -1,11 +1,12 @@
 import tkinter as tk
-from tkinter import simpledialog, messagebox
 import pandas as pd
+import monitor_management
+from tkinter import simpledialog, messagebox
 from textwrap import shorten
 from tkinter import font
 from constants import *
 from screeninfo import get_monitors
-from monitor_management import MonitorManagement
+
 
 # Global variables to track the state
 open_windows = []
@@ -15,6 +16,7 @@ num_windows = 0
 jobs_df_update = pd.DataFrame()
 added_jobs_df_update = pd.DataFrame()
 last_displayed_sacos = []
+num_monitors = 0
 
 class ImportantJobsWindow:
     def __init__(self, parent, jobs_df, num_jobs, on_close_callback=None):
@@ -363,6 +365,7 @@ def update_button_state(important_jobs_button, close_all_button, move_wind_butto
 
 class CustomModalDialog(simpledialog.Dialog):
     def body(self, master):
+        global num_monitors
         tk.Label(master, text="How many Important Jobs screens would you like to open?").grid(row=0)
         
         # Attempt to set the default value based on the number of connected monitors
@@ -433,7 +436,8 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                     messagebox.showerror("Error", f"Error closing all windows: {e}")
 
             def move_windows():
-                MonitorManagement(open_windows)
+                global open_windows
+                monitor_management.arrange_windows(open_windows)
 
             close_all_button.config(command=close_all_windows)
             move_wind_button.config(command=move_windows)
