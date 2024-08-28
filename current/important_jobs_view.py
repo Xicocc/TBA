@@ -5,7 +5,7 @@ from tkinter import simpledialog, messagebox
 from textwrap import shorten
 from tkinter import font
 from constants import *
-from screeninfo import get_monitors
+from monitor_manager import move_to_monitors
 
 
 # Global variables to track the state
@@ -353,12 +353,13 @@ class ImportantJobsWindow:
         except Exception as e:
             messagebox.showerror("Error", f"Error closing window: {e}")
 
-def update_button_state(important_jobs_button, close_all_button):
+def update_button_state(important_jobs_button, close_all_button, move_win_button):
     global original_text, original_command, num_windows
     try:
         if num_windows == 0:
             important_jobs_button.config(text=original_text, command=original_command)
             close_all_button.pack_forget()  # Hide the Close All button
+            move_win_button.pack_forget()
     except Exception as e:
         messagebox.showerror("Error", f"Error updating button state: {e}")
 
@@ -410,8 +411,8 @@ class CustomModalDialog(simpledialog.Dialog):
             messagebox.showwarning("Invalid Input", "Please enter a valid integer.")
             return False
 
-def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button):
-    global original_text, original_command, num_windows
+def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button, move_win_button):
+    global original_text, original_command, num_windows, open_windows
 
     try:
         # Create a custom modal dialog
@@ -426,17 +427,18 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                 original_command = important_jobs_button.cget("command")
 
             # Change button text and command
-            important_jobs_button.config(text="Add Important Job Window", command=lambda: add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button))
+            important_jobs_button.config(text="Add Important Job Window", command=lambda: add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button, move_win_button))
 
             # Update the number of windows and open new ones
             num_windows = num_screens
             for _ in range(num_windows):
-                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=10, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button))
+                window = ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=10, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button, move_win_button))
                 open_windows.append(window)
 
             # Show the Close All button
             important_jobs_button.pack(side=tk.RIGHT, padx=5)
             close_all_button.pack(side=tk.LEFT, padx=5)
+            move_win_button.pack(side=tk.LEFT, padx=5)
 
             def close_all_windows():
                 global num_windows
@@ -446,28 +448,32 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                             window = open_windows.pop()
                             window.window.destroy()
                         num_windows = 0
-                        update_button_state(important_jobs_button, close_all_button)
+                        update_button_state(important_jobs_button, close_all_button, move_win_button)
                 except Exception as e:
                     messagebox.showerror("Error", f"Error closing all windows: {e}")
 
+            def move_windows():
+                move_to_monitors(open_windows)
+
             close_all_button.config(command=close_all_windows)
+            move_win_button.config(command=move_windows)
 
     except Exception as e:
         messagebox.showerror("Error", f"Error showing important jobs: {e}")
 
-def add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button):
+def add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button, move_win_button):
     global num_windows
     try:
         num_windows += 1
-        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=10, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button)))
+        open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=10, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button, move_win_button)))
     except Exception as e:
         messagebox.showerror("Error", f"Error adding important jobs window: {e}")
 
-def window_closed(important_jobs_button, close_all_button):
+def window_closed(important_jobs_button, close_all_button, move_win_button):
     global num_windows
     try:
         num_windows -= 1
-        update_button_state(important_jobs_button, close_all_button)  # Call to update button state
+        update_button_state(important_jobs_button, close_all_button, move_win_button)  # Call to update button state
     except Exception as e:
         messagebox.showerror("Error", f"Error handling window closed: {e}")
 
