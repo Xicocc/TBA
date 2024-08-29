@@ -574,18 +574,8 @@ class JobDisplayApp:
             self.initial_button_frame.pack_forget()
 
             self.load_jobs()
+
             self.root.focus_force()
-
-            self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
-            self.tree.heading('job_id', text=CONST_SACO)
-            self.tree.heading('client', text=CONST_CLIENTE)
-            self.tree.heading('description', text=CONST_DESC)
-            self.tree.heading('quantity', text=CONST_QUANT)
-            self.tree.heading('sector', text=CONST_SECTOR)
-            self.tree.heading('state', text=CONST_ESTADO)
-            self.tree.heading('urgency', text=CONST_URG)
-            self.tree.heading('delivery', text=CONST_DATA_ENTR)
-
 
         except FileNotFoundError as fnf_error:
             messagebox.showerror("File Error", str(fnf_error))
@@ -618,6 +608,16 @@ class JobDisplayApp:
 
     def load_jobs(self):
         try:
+            self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
+            self.tree.heading('job_id', text=CONST_SACO)
+            self.tree.heading('client', text=CONST_CLIENTE)
+            self.tree.heading('description', text=CONST_DESC)
+            self.tree.heading('quantity', text=CONST_QUANT)
+            self.tree.heading('sector', text=CONST_SECTOR)
+            self.tree.heading('state', text=CONST_ESTADO)
+            self.tree.heading('urgency', text=CONST_URG)
+            self.tree.heading('delivery', text=CONST_DATA_ENTR)
+
             # Load the Excel file
             df = pd.read_excel(self.file_path, skiprows=4)
             df.drop(df.columns[0], axis=1, inplace=True)
@@ -637,7 +637,7 @@ class JobDisplayApp:
 
             df[CONST_ESTADO] = df.apply(determine_state, axis=1)
             df.drop(['ALTER', 'REPET'], axis=1, inplace=True)
-            df.columns = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, ORI_CONST_URG, CONST_DATA_ENTR]
+            df.columns = [CONST_SACO, CONST_CLIENTE, CONST_DESC, CONST_QUANT, CONST_SECTOR, CONST_ESTADO, CONST_URG, CONST_DATA_ENTR]
 
             df = df.dropna(subset=[CONST_SACO])
             last_valid_index = df[df[CONST_SACO] != '-'].index.max()
@@ -656,14 +656,11 @@ class JobDisplayApp:
             self.warning_frame.pack_forget()
             self.file_help_button.pack_forget()
 
-            # Standardize column names
-            self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_URG, CONST_URG, regex=False)
-            self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_DESC, CONST_DESC, regex=False)
-            self.jobs_df.columns = self.jobs_df.columns.str.replace(ORI_CONST_SECTOR, CONST_SECTOR, regex=False)
-
             messagebox.showinfo('Success', 'Data imported from excel file successfully')
-            self.enable_buttons()
+
             self.refresh_view()
+
+            self.enable_buttons()
 
         except FileNotFoundError:
             messagebox.showerror("File Error", "The selected file was not found. Please try again.")
