@@ -4,8 +4,6 @@ import tkinter as tk
 import pandas as pd
 import locale
 import logging
-import os
-import sys
 from tkinter import ttk, filedialog, messagebox
 from datetime import datetime
 from reportlab.lib.pagesizes import landscape, A4
@@ -188,13 +186,7 @@ class JobDisplayApp:
             pdf_canvas = canvas.Canvas(pdf_file, pagesize=landscape(A4))
             page_width, page_height = landscape(A4)
 
-            # Determine if the application is running as a standalone executable
-            if getattr(sys, 'frozen', False):
-                # Get the path to the temporary folder created by PyInstaller
-                logo_path = os.path.join(sys._MEIPASS, 'logo_tba.png')
-            else:
-                # When running in a normal Python environment, use the relative path
-                logo_path = 'logo_tba.png'
+            logo_path = "logo_tba.png"
 
             # Load the image file
             aspect_ratio = 609 / 1089  # Adjust based on your logo's aspect ratio
@@ -373,17 +365,6 @@ class JobDisplayApp:
                         self.root.focus_force()
                         return
 
-                    # Set up Treeview columns
-                    self.tree['columns'] = COLUMN_NAMES
-                    for col in self.tree['columns']:
-                        if col == CONST_SECTOR:
-                            # Change the column name in treeview from 'SECTOR EM QUE ESTÁ' to 'SECTOR' for consistency
-                            self.tree.heading(col, text='SECTOR')
-                            self.tree.column(col, anchor="w")
-                        else:
-                            self.tree.heading(col, text=col)
-                            self.tree.column(col, anchor="w")
-
                     # Clear existing items
                     # self.tree.delete(*self.tree.get_children())
 
@@ -404,6 +385,18 @@ class JobDisplayApp:
                     self.warning_frame.pack_forget()
                     self.file_help_button.pack_forget()
                     messagebox.showinfo('Success', 'Data restored successfully')
+                    
+                    # Set up Treeview columns
+                    self.tree['columns'] = COLUMN_NAMES
+                    for col in self.tree['columns']:
+                        if col == CONST_SECTOR:
+                            # Change the column name in treeview from 'SECTOR EM QUE ESTÁ' to 'SECTOR' for consistency
+                            self.tree.heading(col, text='SECTOR')
+                            self.tree.column(col, anchor="w")
+                        else:
+                            self.tree.heading(col, text=col)
+                            self.tree.column(col, anchor="w")
+
                     self.refresh_view()
                     self.root.focus_force()
                     self.is_loaded_data = True
@@ -580,6 +573,9 @@ class JobDisplayApp:
             self.is_loaded_data = True
             self.initial_button_frame.pack_forget()
 
+            self.load_jobs()
+            self.root.focus_force()
+
             self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
             self.tree.heading('job_id', text=CONST_SACO)
             self.tree.heading('client', text=CONST_CLIENTE)
@@ -590,8 +586,6 @@ class JobDisplayApp:
             self.tree.heading('urgency', text=CONST_URG)
             self.tree.heading('delivery', text=CONST_DATA_ENTR)
 
-            self.load_jobs()
-            self.root.focus_force()
 
         except FileNotFoundError as fnf_error:
             messagebox.showerror("File Error", str(fnf_error))
