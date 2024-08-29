@@ -4,6 +4,8 @@ import tkinter as tk
 import pandas as pd
 import locale
 import logging
+import os
+import sys
 from tkinter import ttk, filedialog, messagebox
 from datetime import datetime
 from reportlab.lib.pagesizes import landscape, A4
@@ -186,7 +188,13 @@ class JobDisplayApp:
             pdf_canvas = canvas.Canvas(pdf_file, pagesize=landscape(A4))
             page_width, page_height = landscape(A4)
 
-            logo_path = "logo_tba.png"
+            # Determine if the application is running as a standalone executable
+            if getattr(sys, 'frozen', False):
+                # Get the path to the temporary folder created by PyInstaller
+                logo_path = os.path.join(sys._MEIPASS, 'logo_tba.png')
+            else:
+                # When running in a normal Python environment, use the relative path
+                logo_path = 'logo_tba.png'
 
             # Load the image file
             aspect_ratio = 609 / 1089  # Adjust based on your logo's aspect ratio
