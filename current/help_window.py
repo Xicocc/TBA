@@ -1,3 +1,4 @@
+# Oficial libraries
 import tkinter as tk
 
 # EVERY HELP WINDOW PLACEMENT IS MADE FOR WINDOWSOS (NOT MACOS)

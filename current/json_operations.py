@@ -1,8 +1,9 @@
+# Oficial libraries
 import json
 import tkinter as tk
+import logging
 from tkinter import filedialog, messagebox
 from datetime import datetime
-import logging
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -11,7 +12,7 @@ def save_json_file(data):
     root.withdraw()
 
     date_str = datetime.now().strftime("%d-%m-%Y")
-    default_filename = f"data_{date_str}.json"
+    default_filename = f"state_{date_str}.json"
 
     file_path = filedialog.asksaveasfilename(
         title="Save JSON File",

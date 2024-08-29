@@ -1,5 +1,8 @@
+# Oficial libraries
 import tkinter as tk
 from datetime import datetime
+
+# Developed libraries
 from date_placeholder import PlaceholderEntry
 from constants import *
 from help_window import HelpEdit, HelpAdd
@@ -83,8 +86,8 @@ class EditJobForm:
             tk.messagebox.showerror("Invalid Input", "The date/time format is incorrect. Please use DD/MM/YYYY_HH:MM format.")
             return  # Stop the save process if the date is invalid
         
-        # Fields that are required
-        required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR]
+        # Fields that are required (use standardized column names)
+        required_fields = [CONST_SACO, CONST_CLIENTE, CONST_DESC, CONST_QUANT, CONST_SECTOR]
 
         # Check if any required fields are empty
         missing_fields = [field for field in required_fields if not job[field].strip()]
@@ -100,7 +103,6 @@ class EditJobForm:
         self.update_callback(job)
         self.top.grab_release()  # Release the grab before destroying the window
         self.top.destroy()
-
 
     def cancel_edit(self):
         self.top.grab_release()  # Release the grab before destroying the window

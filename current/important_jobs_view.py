@@ -1,9 +1,12 @@
+# Oficial libraries
 import tkinter as tk
 import pandas as pd
 import platform
 from tkinter import simpledialog, messagebox
 from screeninfo import get_monitors
 from tkinter import font
+
+# Developed libraries
 from constants import *
 
 
@@ -121,13 +124,10 @@ class ImportantJobsWindow:
     def focus_and_raise(self):
         try:
             self.window.focus_set()  # Request focus
-            print(f"Geometry before lift: {self.window.geometry()}")  # Debug: Print geometry
 
             self.window.lift()  # Bring to the front
             self.window.attributes('-topmost', True)  # Set as topmost window
             self.window.attributes('-topmost', False)  # Reset topmost attribute
-
-            print(f"Geometry after topmost reset: {self.window.geometry()}")  # Debug: Print geometry
 
             # Forcing the window to stay on top for a brief moment
             self.window.update_idletasks()
@@ -136,10 +136,8 @@ class ImportantJobsWindow:
 
             # Ensure the window is not minimized
             self.window.deiconify()
-            print(f"Geometry after deiconify: {self.window.geometry()}")  # Debug: Print geometry
         except Exception as e:
             messagebox.showerror("Error", f"Error focusing and raising window: {e}")
-
 
     def on_frame_configure(self, event=None):
         try:
@@ -355,7 +353,7 @@ class ImportantJobsWindow:
         """Create and return the details text for a job."""
         descr_text = self.custom_shorten(job[CONST_DESC], 50, "...")
         client_text = self.custom_shorten(job[CONST_CLIENTE], 30, "...")
-        return f"{job[CONST_SACO]}  |  {client_text}  |  {descr_text}  |  {job[CONST_QUANT]}  |  {job[ORI_CONST_SECTOR]}"
+        return f"{job[CONST_SACO]}  |  {client_text}  |  {descr_text}  |  {job[CONST_QUANT]}  |  {job[CONST_SECTOR]}"
 
     def create_entrega_text(self, job):
         """Create and return the entrega text for a job."""
@@ -644,7 +642,6 @@ def get_monitor_dimensions():
             width = monitor_area[2] - monitor_area[0]
             height = monitor_area[3] - monitor_area[1]
             
-            print(f"Monitor {i + 1}: Width = {width} px, Height = {height} px")
             monitor_widths.append(width)
             monitor_heights.append(height)
             
@@ -656,9 +653,6 @@ def get_monitor_dimensions():
             height = monitor.height
             monitor_widths.append(width)
             monitor_heights.append(height)
-
-    print(f"Monitor_widths : {monitor_widths}")
-    print(f"Number of monitors detected: {len(monitor_widths)}")
 
 def move_to_monitors(open_windows):
     global monitor_widths, monitor_flag
@@ -682,13 +676,9 @@ def move_to_monitors(open_windows):
         if i >= len(monitor_widths) - 1:  # Ensure we don't exceed available monitors
             return
             
-        print(f"Moving window {i} to monitor {i}")
-            
         # Get current window size from the `window` attribute of `ImportantJobsWindow`
         current_width = monitor_widths[i+1]  # Access through `self.window`
         current_height = monitor_heights[i+1]
-            
-        print (f"Monitor_widths state before calculating offset : {monitor_widths}")
 
         # Calculate new position
         x = get_x_coordinate(i)
@@ -700,6 +690,3 @@ def move_to_monitors(open_windows):
         job_window.window.geometry(f"{current_width}x{current_height}+{x - 10}+{y}")
 
         monitor_flag = True
-
-        print(f"Offset (x coordinate) to move : {x}")
-        print(f"Successfully moved the window")

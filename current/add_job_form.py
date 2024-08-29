@@ -1,5 +1,8 @@
+# Oficial libraries
 import tkinter as tk
 from datetime import datetime
+
+# Developed libraries
 from date_placeholder import PlaceholderEntry
 from constants import *
 from help_window import HelpAdd
@@ -25,7 +28,7 @@ class AddJobForm:
         # Form Fields
         self.fields = {}
         row = 1
-        for field in [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR]:
+        for field in [CONST_SACO, CONST_CLIENTE, CONST_DESC, CONST_QUANT, CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR]:
             tk.Label(frame, text=field, width=25, anchor='w', font=('SFPro', 21)).grid(row=row, column=0, sticky='w', pady=5)
             if field == CONST_DATA_ENTR:
                 entry = PlaceholderEntry(frame, "DD/MM/YYYY_HH:MM", width=50, bg='#1e1e1e', fg='white', insertbackground='white', borderwidth=1, relief=tk.FLAT, font=('SFPro', 20))
@@ -78,7 +81,7 @@ class AddJobForm:
             job[CONST_DATA_ENTR] = '-'
 
         # Fields that are required
-        required_fields = [CONST_SACO, CONST_CLIENTE, ORI_CONST_DESC, CONST_QUANT, ORI_CONST_SECTOR]
+        required_fields = [CONST_SACO, CONST_CLIENTE, CONST_DESC, CONST_QUANT, CONST_SECTOR]
 
         # Check if any required fields are empty
         missing_fields = [field for field in required_fields if not job[field].strip()]
