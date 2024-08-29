@@ -73,7 +73,8 @@ class JobDisplayApp:
         # Create and show the warning label inside the warning frame
         self.warning_label = tk.Label(
             self.warning_frame, text="Não se esqueça de periodicamente apagar os ficheiros JSON criados :) \n"
-                + "Apenas apague os ficheiros que tem a certeza que não precisa.",
+                + "Apenas apague os ficheiros que tem a certeza que não precisa.\n"
+                + "Por favor não interfira com os ficheiros .json, o mesmo pode resultar na corrupção de dados.",
             font=('SFPro', 17), wraplength=600
         )
         self.warning_label.pack(pady=10, anchor='center')  # Center the text in the frame
@@ -217,7 +218,7 @@ class JobDisplayApp:
 
             # Define table styles with a gray background for the header
             table_style = TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
                 ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
