@@ -618,6 +618,8 @@ class JobDisplayApp:
             self.tree.heading('urgency', text=CONST_URG)
             self.tree.heading('delivery', text=CONST_DATA_ENTR)
 
+            self.tree.pack_forget()
+
             # Load the Excel file
             df = pd.read_excel(self.file_path, skiprows=4)
             df.drop(df.columns[0], axis=1, inplace=True)
@@ -657,6 +659,8 @@ class JobDisplayApp:
             self.file_help_button.pack_forget()
 
             messagebox.showinfo('Success', 'Data imported from excel file successfully')
+
+            self.tree.pack(fill=tk.BOTH, expand=True)
 
             self.refresh_view()
 
