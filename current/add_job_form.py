@@ -13,7 +13,7 @@ class AddJobForm:
         self.add_callback = add_callback
 
         self.top = tk.Toplevel(parent)
-        self.top.title("Add Job")
+        self.top.title("Adicionar Encomenda")
         self.top.withdraw()  # Hide window until it's fully set up
 
         # Set the AddJobForm window to be on top of the parent window
@@ -42,11 +42,11 @@ class AddJobForm:
         button_frame = tk.Frame(frame)
         button_frame.grid(row=row, column=0, columnspan=2, pady=(10, 0))
 
-        save_button = tk.Button(button_frame, text="Save", fg='green', font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.save_job, width=10, height=1)
+        save_button = tk.Button(button_frame, text="Adicionar", fg='green', font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.save_job, width=10, height=1)
         save_button.grid(row=0, column=0, padx=3)
-        cancel_button = tk.Button(button_frame, text="Cancel", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.cancel_job, width=10, height=1)
+        cancel_button = tk.Button(button_frame, text="Cancelar", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.cancel_job, width=10, height=1)
         cancel_button.grid(row=0, column=1, padx=3)
-        self.add_help_button = tk.Button(button_frame, text="Help", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_add_help)
+        self.add_help_button = tk.Button(button_frame, text="Ajuda", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_add_help)
         self.add_help_button.grid(row=0, column=2, padx=3)
 
         self.top.geometry('600x400')  # Adjust size as needed
@@ -86,12 +86,12 @@ class AddJobForm:
         # Check if any required fields are empty
         missing_fields = [field for field in required_fields if not job[field].strip()]
         if missing_fields:
-            tk.messagebox.showerror("Missing Information", f"The following fields are required: {', '.join(missing_fields)}")
+            tk.messagebox.showerror("Falta de informação", f"Os seguintes campos são obrigatórios : {', '.join(missing_fields)}")
             return  # Stop the save process if required fields are missing
 
         # Validate the datetime format for CONST_DATA_ENTR
         if not self.validate_datetime(job[CONST_DATA_ENTR]):
-            tk.messagebox.showerror("Invalid Input", "The date/time format is incorrect. Please use DD/MM/YYYY_HH:MM format.")
+            tk.messagebox.showerror("Input inválido", "O formato da data está incorreto. Por favor use o format DD/MM/YYYY_HH:MM.")
             return  # Stop the save process if the datetime format is incorrect
 
 

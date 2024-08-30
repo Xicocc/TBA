@@ -47,21 +47,21 @@ class JobDisplayApp:
 
         # Create select file button
         self.select_file_button = tk.Button(
-            self.initial_button_frame, text="Load Excel",
+            self.initial_button_frame, text="Carregar Excel",
             font=('SFPro', 20), pady=5, borderwidth=2, relief=tk.RIDGE,
             command=self.load_file)
         self.select_file_button.pack(side=tk.LEFT, padx=5)
 
         # Create Load State button
         self.load_state_button = tk.Button(
-            self.initial_button_frame, text="Load State",
+            self.initial_button_frame, text="Carregar JSON",
             font=('SFPro', 20), pady=5, borderwidth=2, relief=tk.RIDGE,
             command=self.load_state)
         self.load_state_button.pack(side=tk.LEFT, padx=5)
 
         # Create file help button and pack it to the right side within the same frame
         self.file_help_button = tk.Button(
-            root, text="Help", 
+            root, text="Ajuda", 
             font=('SFPro', 17), pady=5, borderwidth=2, relief=tk.RIDGE, 
             command=self.show_file_help
         )
@@ -97,14 +97,14 @@ class JobDisplayApp:
 
         # Create button frame and buttons
         self.button_frame = tk.Frame(root)
-        self.add_job_button = tk.Button(self.button_frame, text="Add New Job", font=('SFPro', 15), fg='green', pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_add_job_form, state=tk.DISABLED)
-        self.edit_job_button = tk.Button(self.button_frame, text="Edit Job", font=('SFPro', 15), fg='#2f73b4',pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_edit_job_form, state=tk.DISABLED)
-        self.delete_job_button = tk.Button(self.button_frame, text="Delete Job", font=('SFPro', 15), fg='red',pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_delete_job_form, state=tk.DISABLED)
-        self.important_jobs_button = tk.Button(self.button_frame, text="Show Important Jobs", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
-        self.close_all_button = tk.Button(self.button_frame, text="Close All Important Jobs Windows", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
-        self.move_win_button = tk.Button(self.button_frame, text="Move Screens", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
-        self.data_help_button = tk.Button(self.button_frame, text="Help", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_data_help)
-        self.reset_screen_button = tk.Button(self.button_frame, text="Back to files", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.reset_screen)
+        self.add_job_button = tk.Button(self.button_frame, text="Adicionar Encomenda", font=('SFPro', 15), fg='green', pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_add_job_form, state=tk.DISABLED)
+        self.edit_job_button = tk.Button(self.button_frame, text="Editar Encomenda", font=('SFPro', 15), fg='#2f73b4',pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_edit_job_form, state=tk.DISABLED)
+        self.delete_job_button = tk.Button(self.button_frame, text="Apagar Encomenda", font=('SFPro', 15), fg='red',pady=5, borderwidth=2, relief=tk.RIDGE, command=self.open_delete_job_form, state=tk.DISABLED)
+        self.important_jobs_button = tk.Button(self.button_frame, text="Abrir Encomendas Importantes", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_important_jobs, state=tk.DISABLED)
+        self.close_all_button = tk.Button(self.button_frame, text="Fechar Todas Enc. Import.", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
+        self.move_win_button = tk.Button(self.button_frame, text="Mover Encomendas Importantes", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE)
+        self.data_help_button = tk.Button(self.button_frame, text="Ajuda", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_data_help)
+        self.reset_screen_button = tk.Button(self.button_frame, text="Voltar Ecrã Principal", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.reset_screen)
 
         self.add_job_button.pack(side=tk.LEFT, padx=5)
         self.edit_job_button.pack(side=tk.LEFT, padx=5)
@@ -116,7 +116,7 @@ class JobDisplayApp:
         self.reset_screen_button.pack(side=tk.LEFT, padx=5, anchor='w')
 
 
-        self.export_pdf_button = tk.Button(self.button_frame, text="Export to PDF", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.export_to_pdf)
+        self.export_pdf_button = tk.Button(self.button_frame, text="Exportar PDF", font=('SFPro', 15), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.export_to_pdf)
         self.export_pdf_button.pack(side=tk.LEFT, padx=5)
 
 
@@ -140,7 +140,7 @@ class JobDisplayApp:
         self.search_var.trace_add("write", self.refresh_view)  # Update view on search query change
 
         search_frame = tk.Frame(root)
-        self.search_label = tk.Label(search_frame, text="Search:")
+        self.search_label = tk.Label(search_frame, text="Procurar:")
         self.search_entry = tk.Entry(search_frame, textvariable=self.search_var, width=50)
         search_frame.pack(pady=10)
         self.search_label.pack(side=tk.LEFT)
@@ -158,11 +158,11 @@ class JobDisplayApp:
         try:
             # Check if there is data in the filtered DataFrame
             if not hasattr(self, 'filtered_df') or self.filtered_df.empty:
-                messagebox.showerror("Error", "No data available to export.")
+                messagebox.showerror("Erro", "Não existem dados para exportar para PDF.")
                 return
 
             # Drop the last column from the DataFrame
-            filtered_df = self.filtered_df.iloc[:, :-1]  # Drop the last column
+            filtered_df = self.filtered_df  # Drop the last column
 
             # Set locale to Portuguese for date formatting
             locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
@@ -320,14 +320,14 @@ class JobDisplayApp:
             # Save the PDF
             pdf_canvas.save()
 
-            messagebox.showinfo("Success", "Data exported to PDF successfully.")
+            messagebox.showinfo("Sucesso", "Dados exportados para PDF com sucesso!.")
             self.root.focus_force()
 
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to export to PDF: {e}")
+            messagebox.showerror("Erro", f"Falha ao exportar PDF. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def reset_screen(self):
-        response = messagebox.askyesno("Confirm", "Are you sure you want to go back to the main screen? All progress will be lost.")
+        response = messagebox.askyesno("Confirmar", "Tem a certeza que quer voltar ao ecrã inicial? Todo o progresso será perdido")
         if response:
             """Reset to the initial main screen by creating a new instance of JobDisplayApp."""
             # Destroy the current window
@@ -357,7 +357,7 @@ class JobDisplayApp:
                     if 'jobs_df' in loaded_data:
                         self.jobs_df = pd.DataFrame(loaded_data['jobs_df'])
                     else:
-                        messagebox.showerror('Error', 'Missing data (data1)')
+                        messagebox.showerror('Erro', 'Dados incompletos. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação)')
                         self.root.focus_force()
                         return
 
@@ -368,7 +368,7 @@ class JobDisplayApp:
                             # Reinitialize with the correct columns if loaded DataFrame is empty
                             self.added_jobs_df = pd.DataFrame(columns=[CONST_SACO, CONST_CLIENTE, CONST_DESC, CONST_QUANT, CONST_SECTOR, CONST_ESTADO, 'URGENCIA', CONST_DATA_ENTR])
                     else:
-                        messagebox.showerror('Error', 'Missing data (data2)')
+                        messagebox.showerror('Erro', 'Dados incompletos. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação)')
                         self.root.focus_force()
                         return
 
@@ -391,7 +391,7 @@ class JobDisplayApp:
                     self.initial_button_frame.pack_forget()
                     self.warning_frame.pack_forget()
                     self.file_help_button.pack_forget()
-                    messagebox.showinfo('Success', 'Data restored successfully')
+                    messagebox.showinfo('Sucesso', 'Dados restaurados com sucesso!')
                     
                     # Set up Treeview columns
 
@@ -405,29 +405,29 @@ class JobDisplayApp:
                     self.is_loaded_data = True
                     self.enable_buttons()
                 else:
-                    messagebox.showerror('Error', 'Expected a dictionary with data keys')
+                    messagebox.showerror('Erro', 'Esperado dicionário com chaves de dados. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação).')
                     self.root.focus_force()
             else:
-                messagebox.showerror('Error', 'Failed to load data')
+                messagebox.showerror('Erro', 'Falha ao carregar dados')
                 self.root.focus_force()
         except json.JSONDecodeError:
-            messagebox.showerror('Error', 'Error decoding data. The file may be corrupted.')
+            messagebox.showerror('Erro', 'Erro ao descodificar dados. O ficheiro pode ter sido corrompido.')
             self.root.focus_force()
         except pd.errors.EmptyDataError:
-            messagebox.showerror('Error', 'Data is empty or could not be processed.')
+            messagebox.showerror('Erro', 'Dados vazios ou não podem ser processados.')
             self.root.focus_force()
         except KeyError as e:
-            messagebox.showerror('Error', f'Missing expected key: {e}')
+            messagebox.showerror('Error', f'Chave esperada desaparecida. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}')
             self.root.focus_force()
         except Exception as e:
-            messagebox.showerror('Error', f'Unexpected error: {e}')
+            messagebox.showerror('Erro', f'Oops! Um erro inesperado aconteceu. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}')
             self.root.focus_force()
 
     def on_close(self):
         """Handle the window closing event."""
         try:
             if self.is_loaded_data:
-                result = messagebox.askyesno("Save State", "Do you want to save the current data state?")
+                result = messagebox.askyesno("Guardar estado", "Quer guardar o estado da aplicação?")
                 self.root.focus_force()
 
                 if result:
@@ -455,9 +455,9 @@ class JobDisplayApp:
 
                     # Save the state to a JSON file
                     if json_operations.save_json_file({'data': state}):
-                        messagebox.showinfo("Info", "State saved successfully.\nThe application will close now.")
+                        messagebox.showinfo("Info", "Estado guardado com sucesso.\nA aplicação vai agora fechar :).")
                     else:
-                        messagebox.showerror("Error", "Failed to save state.\nThe application will not close.")
+                        messagebox.showerror("Erro", "Erro ao guardar estado.\nA aplicação não vai fechar :(.")
                         self.root.focus_force()
                         return
 
@@ -467,17 +467,17 @@ class JobDisplayApp:
                 self.root.destroy()
                 self.root.quit()
         except IOError as e:
-            messagebox.showerror("Error", f"File I/O error: {e}")
+            messagebox.showerror("Erro", f"Ficheiro OG em falta. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação): {e}")
             self.root.focus_force()
             self.root.destroy()
             self.root.quit()
         except json.JSONDecodeError:
-            messagebox.showerror("Error", "Data encoding issues prevented state saving.")
+            messagebox.showerror("Erro", "Erros ao codificar dados preveniram o salvamento de estad. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação)")
             self.root.focus_force()
             self.root.destroy()
             self.root.quit()
         except Exception as e:
-            messagebox.showerror("Error", f"Unexpected error: {e}")
+            messagebox.showerror("Erro", f"Oops! Um erro inesperado aconteceu. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
             self.root.focus_force()
             self.root.destroy()
             self.root.quit()
@@ -500,7 +500,7 @@ class JobDisplayApp:
                     self.delete_job_button.configure(state=tk.NORMAL)
                 else:
                     # Handle missing item in map
-                    messagebox.showerror("Error", f"Treeview item '{tree_item}' not found in the index map.")
+                    messagebox.showerror("Erro", f"Entrda da árvore '{tree_item}' nao encontrado no mapa de indexes. Verifique que o ficheir JSON não foi corrompido. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação)")
                     self.selected_job_index = None
                     self.editing_added_job = False
                     self.edit_job_button.configure(state=tk.DISABLED)
@@ -511,7 +511,7 @@ class JobDisplayApp:
                 self.edit_job_button.configure(state=tk.DISABLED)
                 self.delete_job_button.configure(state=tk.DISABLED)
         except Exception as e:
-            messagebox.showerror("Error", f"Unexpected error: {e}")
+            messagebox.showerror("Erro", f"Oops! Um erro inesperado aconteceu (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
             logging.error(f"Exception in on_treeview_select: {e}")
 
     def open_add_job_form(self):
@@ -522,7 +522,7 @@ class JobDisplayApp:
         required_fields = [CONST_SACO, CONST_CLIENTE, CONST_DESC, CONST_QUANT, CONST_SECTOR]
         for field in required_fields:
             if not job.get(field):
-                return False, f"The field '{field}' is required."
+                return False, f"O campo '{field}' é obrigatório."
 
         # The date field is optional and not validated
         return True, ""
@@ -530,7 +530,7 @@ class JobDisplayApp:
     def add_job(self, job):
         valid, message = self.validate_job(job)
         if not valid:
-            messagebox.showerror("Validation Error", message)
+            messagebox.showerror("Erro validação", message)
             return  # Prevent the form from closing by returning early
         
         # Append new job to the added_jobs_df DataFrame
@@ -566,12 +566,12 @@ class JobDisplayApp:
         """Handles file selection and initializes Treeview columns."""
         try:
             self.file_path = filedialog.askopenfilename(
-                title="Select Excel File",
+                title="Selecione ficheiro Excel",
                 filetypes=(("Excel files", "*.xlsx *.xls"), ("All files", "*.*"))
             )
 
             if not self.file_path:
-                raise FileNotFoundError("No file selected. Please try again.")
+                raise FileNotFoundError("Nenhum ficheiro seleciona. Por favor tente de novo.")
 
             self.is_loaded_data = True
             self.initial_button_frame.pack_forget()
@@ -581,16 +581,16 @@ class JobDisplayApp:
             self.root.focus_force()
 
         except FileNotFoundError as fnf_error:
-            messagebox.showerror("File Error", str(fnf_error))
+            messagebox.showerror("Erro ficheiro", f"{fnf_error} (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação)")
             self.root.focus_force()
         except pd.errors.EmptyDataError as empty_data_error:
-            messagebox.showerror("Data Error", f"File is empty or cannot be read. {empty_data_error}")
+            messagebox.showerror("Erro de dados", f"Ficheiro vazio ou não pode ser lido. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {empty_data_error}")
             self.root.focus_force()
         except ValueError as value_error:
-            messagebox.showerror("Value Error", f"Value error: {value_error}")
+            messagebox.showerror("Erro valor", f"Erro valor. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {value_error}")
             self.root.focus_force()
         except Exception as e:
-            messagebox.showerror("Error", f"Unexpected error: {e}")
+            messagebox.showerror("Erro", f"Oops, um erro inesperado aconteceu. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
             self.root.focus_force()
 
     def parse_date(self, date_str, format=DATE_FORMAT):
@@ -649,7 +649,7 @@ class JobDisplayApp:
             self.warning_frame.pack_forget()
             self.file_help_button.pack_forget()
 
-            messagebox.showinfo('Success', 'Data imported from excel file successfully')
+            messagebox.showinfo('Sucesso', 'Dados importados de ficheiro Excel com sucesso! :)')
 
             self.tree['columns'] = COLUMN_NAMES
             for col in self.tree['columns']:
@@ -661,19 +661,19 @@ class JobDisplayApp:
             self.enable_buttons()
 
         except FileNotFoundError:
-            messagebox.showerror("File Error", "The selected file was not found. Please try again.")
+            messagebox.showerror("Erro ficheiro", f"Ficheiro não encontrado.")
             self.root.focus_force()
         except pd.errors.EmptyDataError:
-            messagebox.showerror("Data Error", "The selected file is empty or cannot be read. Please check the file.")
+            messagebox.showerror("Erro dados", "O ficheiro selecionado está vazio ou não poder ser lido. Verifique o mesmo.")
             self.root.focus_force()
         except pd.errors.ParserError:
-            messagebox.showerror("Parse Error", "There was an error parsing the file. Please check the file format.")
+            messagebox.showerror("Erro parse", "Ocorreu um erro ao parsar ficheiro. Verique o mesmo")
             self.root.focus_force()
         except ValueError as value_error:
-            messagebox.showerror("Value Error", f"Value error occurred: {value_error}")
+            messagebox.showerror("Erro valor", f"Value error occurred: {value_error}")
             self.root.focus_force()
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to load jobs: {e}")
+            messagebox.showerror("Error", f"Erro valor. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {value_error}")
             self.root.focus_force()
 
     def filter_by_date(self, df, query):
@@ -683,13 +683,13 @@ class JobDisplayApp:
                 return False
             
             try:
-                if query.startswith("day:"):
+                if query.startswith("dia:"):
                     day = int(query.split(':')[1])
                     return date.day == day
-                elif query.startswith("month:"):
+                elif query.startswith("mes:"):
                     month = int(query.split(':')[1])
                     return date.month == month
-                elif query.startswith("year:"):
+                elif query.startswith("ano:"):
                     year = int(query.split(':')[1])
                     return date.year == year
             except ValueError:
@@ -712,7 +712,7 @@ class JobDisplayApp:
         self.filtered_df = df.copy()
 
         # Apply specific filters based on the query prefix
-        if query.startswith("day:") or query.startswith("month:") or query.startswith("year:"):
+        if query.startswith("dia:") or query.startswith("mes:") or query.startswith("ano:"):
             # Use the existing filter_by_date for date-based queries
             self.filtered_df = self.filter_by_date(self.filtered_df, query)
         else:
@@ -809,11 +809,11 @@ class JobDisplayApp:
                 self.tree_index_map.clear()
 
         except pd.errors.EmptyDataError:
-            messagebox.showerror("Error", "No data available to refresh the view.")
+            messagebox.showerror("Erro", "Não existem dados para atualizar ecrã")
         except AttributeError as e:
-            messagebox.showerror("Error", f"Attribute error: {e}")
+            messagebox.showerror("Erro", f"Erro de atributo. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to refresh view: {e}. Please try closing and reopening the app :)")
+            messagebox.showerror("Erro", f"Falha ao atualizar o ecrã {e}. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) :)")
             logging.error(f"Exception in refresh_view: {e}")
 
     def adjust_column_widths(self):
@@ -872,7 +872,7 @@ class JobDisplayApp:
     def update_job(self, updated_job):
         valid, message = self.validate_job(updated_job)
         if not valid:
-            messagebox.showerror("Validation Error", message)
+            messagebox.showerror("Erro validação", message)
             self.root.focus_force()  # Re-focus on the main window
             return
 
@@ -945,7 +945,7 @@ class JobDisplayApp:
             # Refresh the view
             self.refresh_view()
         else:
-            messagebox.showerror("Error", "Job not found for deletion.")
+            messagebox.showerror("Erro", "Encomenda não encontrada")
             self.root.focus_force()  # Re-focus on the main window
         
         self.selected_job_index = None

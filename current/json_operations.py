@@ -30,10 +30,10 @@ def save_json_file(data):
                 json.dump(data, file, indent=4)
             return True
         except IOError as e:
-            messagebox.showerror("Error", f"Failed to write to file: {e}")
+            messagebox.showerror("Erro", f"Erro ao escrever ficheiro JSON (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
             logging.error(f"IOError: {e}")
         except Exception as e:
-            messagebox.showerror("Error", f"An unexpected error occurred: {e}")
+            messagebox.showerror("Erro", f"Opps! Um erro inesperado aconteceu (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
             logging.error(f"Unexpected Error: {e}")
     return False
 
@@ -54,7 +54,7 @@ def load_json_file():
                 data = json.load(file)
             return data
         except json.JSONDecodeError:
-            messagebox.showerror("Error", "Failed to decode JSON file. Please make sure the file is valid JSON.")
+            messagebox.showerror("Erro", "Falha ao descodificar ficheiro JSON. Por favor verifique que está a usar o ficheiro JSON correto")
         except Exception as e:
-            messagebox.showerror("Error", f"An unexpected error occurred: {e}")
+            messagebox.showerror("Erro", f"Opps! Um erro inesperado aconteceu (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
     return None

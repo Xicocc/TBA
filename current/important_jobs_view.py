@@ -75,7 +75,7 @@ class ImportantJobsWindow:
 
             self.window.protocol("WM_DELETE_WINDOW", self.on_close)
         except Exception as e:
-            messagebox.showerror("Error", f"Error initializing Important Jobs window: {e}")
+            messagebox.showerror("Erro", f"Erro ao inicializar vista (Este erro é do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def adjust_window_for_decorations(self):
         """Adjusts the window size and position to account for decorations."""
@@ -99,7 +99,7 @@ class ImportantJobsWindow:
             # Ensure the window updates to the new size
             self.window.update_idletasks()
         except Exception as e:
-            messagebox.showerror("Error", f"Error adjusting window for decorations: {e}")
+            messagebox.showerror("Erro", f"Erro ao ajudatr janela (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def get_main_monitor_dimensions(self):
         """Gets the width and height of the main monitor."""
@@ -119,7 +119,7 @@ class ImportantJobsWindow:
 
             return width, height
         except Exception as e:
-            messagebox.showerror("Error", f"Error retrieving main monitor dimensions: {e}")
+            messagebox.showerror("Erro", f"Erro dimenções do ecrã principal (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def focus_and_raise(self):
         try:
@@ -137,7 +137,7 @@ class ImportantJobsWindow:
             # Ensure the window is not minimized
             self.window.deiconify()
         except Exception as e:
-            messagebox.showerror("Error", f"Error focusing and raising window: {e}")
+            messagebox.showerror("Erro", f"Erro ao focar na janela (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def on_frame_configure(self, event=None):
         try:
@@ -161,7 +161,7 @@ class ImportantJobsWindow:
             # Center the content
             self.center_content()
         except Exception as e:
-            messagebox.showerror("Error", f"Error configuring frame: {e}")
+            messagebox.showerror("Erro", f"Erro ao configurar moldura (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def center_content(self):
         try:
@@ -184,7 +184,7 @@ class ImportantJobsWindow:
             # Set the position of the scrollable frame
             self.canvas.coords(self.canvas.find_all()[0], x_offset, y_offset)
         except Exception as e:
-            messagebox.showerror("Error", f"Error centering content: {e}")
+            messagebox.showerror("Erro", f"Erro ao centrar conteúdo (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def scroll_to_center(self):
         try:
@@ -226,7 +226,7 @@ class ImportantJobsWindow:
                 center_y = (canvas_height - first_job_frame_height) // 2
                 self.canvas.yview_moveto((first_job_frame_y - center_y) / (self.canvas.bbox("all")[3] - canvas_height))
         except Exception as e:
-            messagebox.showerror("Error", f"Error scrolling to center: {e}")
+            messagebox.showerror("Erro", f"Erro ao focar no centro (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     #Beggining of functions to handle the creation/updating of the important jobs windows
 
@@ -260,7 +260,7 @@ class ImportantJobsWindow:
 
             self.update_canvas()
         except Exception as e:
-            messagebox.showerror("Error", f"Error updating display: {e}")
+            messagebox.showerror("Erro", f"Erro ao atualizar o ecrã (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def get_date_from_job(self, job):
         """Extract the date part (day, month, year) from the job's CONST_DATA_ENTR field."""
@@ -333,7 +333,7 @@ class ImportantJobsWindow:
 
             self.add_details_to_frame(job_frame, details_text, entrega_text, is_highlighted, font_size, padx_values, avg_wraplength)
         except Exception as e:
-            messagebox.showerror("Error", f"Error displaying job {idx}: {e}")
+            messagebox.showerror("Erro", f"Error ao mostar encomenda : (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) {idx} : {e}")
 
     def create_job_frame(self, is_highlighted):
         """Create and return a job frame widget with conditional styling."""
@@ -384,7 +384,7 @@ class ImportantJobsWindow:
                 y_position = self.entry_positions[index]
                 self.canvas.yview_moveto(y_position / self.canvas.bbox("all")[3])  # Normalize the position
         except Exception as e:
-            messagebox.showerror("Error", f"Error scrolling to entry {index}: {e}")
+            messagebox.showerror("Erro", f"Erro ao focar na entrada (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) {index} : {e}")
 
     def _on_mouse_wheel(self, event):
         try:
@@ -394,7 +394,7 @@ class ImportantJobsWindow:
             elif event.num == 5 or event.delta < 0:
                 self.canvas.yview_scroll(1, "units")
         except Exception as e:
-            messagebox.showerror("Error", f"Error handling mouse wheel: {e}")
+            messagebox.showerror("Erro", f"Erro de roda de rato (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
     def on_close(self):
         global num_monitors, monitor_widths, monitor_height, monitor_flag
@@ -421,7 +421,7 @@ class ImportantJobsWindow:
                 monitor_flag = False
 
         except Exception as e:
-            messagebox.showerror("Error", f"Error closing window: {e}")
+            messagebox.showerror("Erro", f"Erro ao fechar a janela (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
 def update_button_state(important_jobs_button, close_all_button, move_win_button):
     global original_text, original_command, num_windows
@@ -431,12 +431,12 @@ def update_button_state(important_jobs_button, close_all_button, move_win_button
             close_all_button.pack_forget()  # Hide the Close All button
             move_win_button.pack_forget()
     except Exception as e:
-        messagebox.showerror("Error", f"Error updating button state: {e}")
+        messagebox.showerror("Erro", f"Erro ao atualizar estados de butões (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
 class CustomModalDialog(simpledialog.Dialog):
     def body(self, master):
         global num_monitors
-        tk.Label(master, text="How many Important Jobs screens would you like to open?").grid(row=0)
+        tk.Label(master, text="Quantas janelas de encomendas importantes quer abrir?").grid(row=0)
         
         # Attempt to set the default value based on the number of connected monitors
         try:
@@ -460,7 +460,7 @@ class CustomModalDialog(simpledialog.Dialog):
 
         except Exception as e:
             num_monitors = 1  # Fallback to 1 if there's an error
-            messagebox.showwarning("Monitor Detection Error", f"Could not detect monitors. Defaulting to 1 screen. Error: {e}")
+            messagebox.showwarning("Erro deteção de monitores", f"Não foram detetado monitores extra. Assumindo só 1 ecrã. Erro: {e}")
         
         self.entry = tk.Entry(master)
         self.entry.grid(row=1)
@@ -475,10 +475,10 @@ class CustomModalDialog(simpledialog.Dialog):
                 self.result = value
                 return True
             else:
-                messagebox.showwarning("Invalid Input", "Please enter a number between 1 and 10.")
+                messagebox.showwarning("Input Inválido", "Por favor insira um nº entre 1 e 10.")
                 return False
         except ValueError:
-            messagebox.showwarning("Invalid Input", "Please enter a valid integer.")
+            messagebox.showwarning("Input Inválido", "Por favor insira um nº inteiro válido.")
             return False
 
 def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button, move_win_button):
@@ -486,7 +486,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
 
     try:
         # Create a custom modal dialog
-        dialog = CustomModalDialog(root, title="Number of Screens")
+        dialog = CustomModalDialog(root, title="Nº de janelas")
 
         if dialog.result is not None:  # Check if user input was successful
             num_screens = dialog.result
@@ -497,7 +497,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                 original_command = important_jobs_button.cget("command")
 
             # Change button text and command
-            important_jobs_button.config(text="Add Important Job Window", command=lambda: add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button, move_win_button))
+            important_jobs_button.config(text="Adicionar Janela Enc. Import.", command=lambda: add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button, move_win_button))
 
             # Update the number of windows and open new ones
             num_windows = num_screens
@@ -513,7 +513,7 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
             def close_all_windows():
                 global num_windows, monitor_widths, num_monitors, monitor_heights, monitor_flag
                 try:
-                    if messagebox.askokcancel("Confirm Close", "Are you sure you want to close all Important Jobs windows? \n\n You can re-open them later."):
+                    if messagebox.askokcancel("Confirmar fecho", "Tem a certeza que quer fechar todas as janelas de encomendas importantes? \n\n Poderá voltar a abri-las depois"):
                         monitor_widths.clear()
                         monitor_heights.clear()
                         num_monitors = 0
@@ -524,20 +524,20 @@ def show_important_jobs(root, jobs_df, added_jobs_df, important_jobs_button, clo
                         num_windows = 0
                         update_button_state(important_jobs_button, close_all_button, move_win_button)
                 except Exception as e:
-                    messagebox.showerror("Error", f"Error closing all windows: {e}")
+                    messagebox.showerror("Erro", f"Erro ao fechar as janelas (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
             def move_windows():
                 global monitor_flag
                 if(not monitor_flag):
                     move_to_monitors(open_windows)
                 else:
-                    messagebox.showinfo('Already done', 'Windows have already been moved!')
+                    messagebox.showinfo('Operação já efetuada', 'As janelas já foram movidas!')
 
             close_all_button.config(command=close_all_windows)
             move_win_button.config(command=move_windows)
 
     except Exception as e:
-        messagebox.showerror("Error", f"Error showing important jobs: {e}")
+        messagebox.showerror("Erro", f"Erro ao encomendas importantes (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
 def add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_button, close_all_button, move_win_button):
     global num_windows
@@ -545,7 +545,7 @@ def add_important_jobs_window(root, jobs_df, added_jobs_df, important_jobs_butto
         num_windows += 1
         open_windows.append(ImportantJobsWindow(root, get_important_jobs_data(jobs_df, added_jobs_df), num_jobs=10, on_close_callback=lambda: window_closed(important_jobs_button, close_all_button, move_win_button)))
     except Exception as e:
-        messagebox.showerror("Error", f"Error adding important jobs window: {e}")
+        messagebox.showerror("Erro", f"Erro ao adicinoar janelas de encomendas importantes (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
 def window_closed(important_jobs_button, close_all_button, move_win_button):
     global num_windows
@@ -553,7 +553,7 @@ def window_closed(important_jobs_button, close_all_button, move_win_button):
         num_windows -= 1
         update_button_state(important_jobs_button, close_all_button, move_win_button)  # Call to update button state
     except Exception as e:
-        messagebox.showerror("Error", f"Error handling window closed: {e}")
+        messagebox.showerror("Erro", f"Erro ao manusear janela fechada (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
 def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=10, buffer_size=20):
     global jobs_df_update, added_jobs_df_update
@@ -574,7 +574,7 @@ def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=10, buffer_size=20)
             try:
                 combined_df[CONST_DATA_ENTR] = pd.to_datetime(combined_df[CONST_DATA_ENTR], format=DATE_FORMAT, errors='coerce')
             except Exception as e:
-                messagebox.showerror("Error", f"Date conversion error: {e}")
+                messagebox.showerror("Erro", f"Erro de conversão de data (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
                 return pd.DataFrame()
 
             # Split the DataFrame into jobs with and without a valid date
@@ -587,10 +587,10 @@ def get_important_jobs_data(jobs_df, added_jobs_df, num_jobs=10, buffer_size=20)
             # Ensure to return only the required number of jobs to display
             return combined_jobs.head(num_jobs)
         else:
-            messagebox.showinfo("Info", "No jobs to display.")
+            messagebox.showinfo("Info", "Não há encomendas para demonstrar.")
             return pd.DataFrame()
     except Exception as e:
-        messagebox.showerror("Error", f"Error getting important jobs data: {e}")
+        messagebox.showerror("Erro", f"Erro ao retornar dados das encomendas (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
         return pd.DataFrame()
 
 def get_displayed_saco_values(df, num_jobs):
@@ -598,7 +598,7 @@ def get_displayed_saco_values(df, num_jobs):
         # Get the CONST_SACO values of the top num_jobs entries
         return list(df.head(num_jobs)[CONST_SACO])
     except Exception as e:
-        messagebox.showerror("Error", f"Error getting displayed SACO values: {e}")
+        messagebox.showerror("Erro", f"Erroao retornar valores de SACO das encomendas (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
         return []
 
 def refresh_all_windows():
@@ -617,12 +617,12 @@ def refresh_all_windows():
                 window.jobs_df = updated_data  # Update the data for the window
                 window.update_display()  # Refresh the window display
             except Exception as e:
-                messagebox.showerror("Error", f"Error refreshing window: {e}")
+                messagebox.showerror("Erro", f"Erro ao atualizar a janela principal (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
         # Update the last stored SACO values after the refresh
         last_displayed_sacos = new_displayed_sacos
     except Exception as e:
-        messagebox.showerror("Error", f"Error refreshing all windows: {e}")
+        messagebox.showerror("Erro", f"Erro ao atualizar as janelas de encomendas importantes (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
 
 def get_monitor_dimensions():
     """Gets the width and height of each monitor on the system."""
@@ -662,8 +662,8 @@ def move_to_monitors(open_windows):
     """Moves each window to a specific monitor based on available monitors."""
     if len(open_windows) < len(monitor_widths) - 1:
         messagebox.showerror(
-            'Not enough windows',
-            'The number of Important Job Windows is smaller than the number of monitors available. Please open more windows to match the number of monitors.'
+            'Janelas insuficientes',
+            'O número de janelas de encomendas importantes é menor que o número de monitores disponíveis. Por favor abra mais janelas de forma a igualar, pelo menos, o número de janelas com o número de monitores.'
         )
         return
         

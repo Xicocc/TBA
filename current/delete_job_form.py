@@ -19,7 +19,7 @@ class DeleteJobForm:
         frame = tk.Frame(self.top, padx=20, pady=20)
         frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
 
-        tk.Label(frame, text="Delete Job", font=('SFPro', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
+        tk.Label(frame, text="Apagar Encomenda", font=('SFPro', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         # Display job details
         details_frame = tk.Frame(frame)
@@ -33,9 +33,9 @@ class DeleteJobForm:
         button_frame = tk.Frame(frame)
         button_frame.grid(row=2, column=0, columnspan=2, pady=(10, 0))
 
-        delete_button = tk.Button(button_frame, text="Delete", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.confirm_deletion_popup, fg="red", width=10, height=1)
+        delete_button = tk.Button(button_frame, text="Apagar", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.confirm_deletion_popup, fg="red", width=10, height=1)
         delete_button.grid(row=0, column=0, padx=3)
-        cancel_button = tk.Button(button_frame, text="Cancel", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.cancel_deletion, width=10, height=1)
+        cancel_button = tk.Button(button_frame, text="Cancelar", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.cancel_deletion, width=10, height=1)
         cancel_button.grid(row=0, column=1, padx=3)
 
         self.top.geometry('400x300')  # Adjust size as needed
@@ -59,7 +59,7 @@ class DeleteJobForm:
         window.geometry(f'{width}x{height}+{x}+{y}')
 
     def confirm_deletion_popup(self):
-        response = messagebox.askyesno("Confirm Deletion", "Are you sure you want to delete this job? This is a permanent action.")
+        response = messagebox.askyesno("Confirmar operação", "Tem a certeza que deseja apagar esta entrada? Esta ação é permanente.")
         if response:
             if self.delete_callback:
                 self.delete_callback(self.job)

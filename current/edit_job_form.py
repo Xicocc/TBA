@@ -24,7 +24,7 @@ class EditJobForm:
         frame = tk.Frame(self.top, padx=20, pady=20)
         frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
 
-        tk.Label(frame, text="Edit Job", font=('SFPro', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
+        tk.Label(frame, text="Editar Encomenda", font=('SFPro', 25, 'bold')).grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         # Form Fields
         self.fields = {}
@@ -44,11 +44,11 @@ class EditJobForm:
         button_frame = tk.Frame(frame)
         button_frame.grid(row=row, column=0, columnspan=2, pady=(10, 0))
 
-        save_button = tk.Button(button_frame, text="Save", fg='#2f73b4', font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.save_job, width=10, height=1)
+        save_button = tk.Button(button_frame, text="Salvar", fg='#2f73b4', font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.save_job, width=10, height=1)
         save_button.grid(row=0, column=0, padx=3)
-        cancel_button = tk.Button(button_frame, text="Cancel", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.cancel_edit, width=10, height=1)
+        cancel_button = tk.Button(button_frame, text="Cancelar", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.cancel_edit, width=10, height=1)
         cancel_button.grid(row=0, column=1, padx=3)
-        self.edit_help_button = tk.Button(button_frame, text="Help", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_edit_help)
+        self.edit_help_button = tk.Button(button_frame, text="Ajuda", font=('SFPro', 25), pady=5, borderwidth=2, relief=tk.RIDGE, command=self.show_edit_help)
         self.edit_help_button.grid(row=0, column=2, padx=3)
 
         self.top.geometry('600x400')  # Adjust size as needed
@@ -83,7 +83,7 @@ class EditJobForm:
 
         # Validate the date field only if it's not set to "-"
         if job[CONST_DATA_ENTR] != "-" and not self.validate_datetime(job[CONST_DATA_ENTR]):
-            tk.messagebox.showerror("Invalid Input", "The date/time format is incorrect. Please use DD/MM/YYYY_HH:MM format.")
+            tk.messagebox.showerror("Input Inválido", "O formato da data está incorreto. Por favor use o format DD/MM/YYYY_HH:MM.")
             return  # Stop the save process if the date is invalid
         
         # Fields that are required (use standardized column names)
@@ -92,7 +92,7 @@ class EditJobForm:
         # Check if any required fields are empty
         missing_fields = [field for field in required_fields if not job[field].strip()]
         if missing_fields:
-            tk.messagebox.showerror("Missing Information", f"The following fields are required: {', '.join(missing_fields)}")
+            tk.messagebox.showerror("Falta de informação", f"Os seguintes campos são obrigatórios : {', '.join(missing_fields)}")
             return  # Stop the save process if required fields are missing
         
         # Replace any remaining empty fields with "-"

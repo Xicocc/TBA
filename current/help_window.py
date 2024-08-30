@@ -10,7 +10,7 @@ class HelpFile:
     def create_help_window(self):
         # Create a new Toplevel window
         self.help_window = tk.Toplevel(self.root)
-        self.help_window.title("Help - File Loading")
+        self.help_window.title("Ajuda - Importar Ficheiros")
         
         self.screen_width = self.root.winfo_screenwidth()
         self.screen_height = self.root.winfo_screenheight()
@@ -38,8 +38,8 @@ class HelpFile:
         help_message = """
         - Pode submeter 2 tipos de ficheiros na aplicação:
 
-            - Ficheiro excel - Load File
-            - Ficheiro JSON - Load State
+            - Ficheiro excel - Carregar Excel
+            - Ficheiro JSON - Carregar JSON
 
         O ficheiro excel submetido deve ter a formatação correta (A qual é do conhecimento dos colaboradores). \n
         O ficheiro JSON é gerado automaticamente no processo de salvamento do estado da aplicação e NÃO deve ser alterado manualmente, correndo o risco de corromper o mesmo.
@@ -70,7 +70,7 @@ class HelpData:
     def create_help_window(self):
         # Create a new Toplevel window
         self.help_window = tk.Toplevel(self.root)
-        self.help_window.title("Help - Data")
+        self.help_window.title("Ajuda - Dados")
         
         self.screen_width = self.root.winfo_screenwidth()
         self.screen_height = self.root.winfo_screenheight()
@@ -97,10 +97,10 @@ class HelpData:
         help_message = """
         Neste ecrã pode :
 
-        1 - Adicionar um novo trabalho (Botão Add New Job).
-        2 - Editar/Apagar um trabalho já existente na tabela (Botões Edit Job e Delete Job)
-        3 - Fazer uma pesquisa por palavras chave na barra "Search"
-        4 - Abrir uma (ou mais) janela que mostra os oito trabalhos mais urgentes ordenados por data de entrega. 
+        1 - Adicionar uma nova encomenda.
+        2 - Editar/Apagar uma encomenda já existente
+        3 - Fazer uma pesquisa por palavras chave na barra "Procura"
+        4 - Abrir uma (ou mais) janela que mostra as 8 encomendas mais urgentes ordenadas por data de entrega. 
 
             A pesquisa pode ser feita por:
                 - palavras "soltas", como por exemplo:
@@ -113,10 +113,10 @@ class HelpData:
                     -  estado:   (Estado do trabalho)
                     -  urg:      (Urgência / Observações)
                     -  obs:      (Urgência / Observações)
-                    -  year:     (Ano do trabalho)
-                    -  month:    (Mês do trabalho)
-                    -  day:      (Dia do trabalho)
-            Nota: Os filtro day:, month: e year: apenas são aplicáveis a entradas da tabela com valores de data.
+                    -  ano:     (Ano do trabalho)
+                    -  mes:    (Mês do trabalho)
+                    -  dia:      (Dia do trabalho)
+            Nota: Os filtro dia:, mes: e ano: apenas são aplicáveis a entradas da tabela com valores de data.
         """
         text_widget = tk.Text(frame, wrap=tk.WORD, font=('SFPro', 18), padx=20, pady=20, height=20)  # Set a fixed height
         text_widget.insert(tk.END, help_message)
@@ -152,7 +152,7 @@ class HelpAdd:
     def create_help_window(self):
         # Create a new Toplevel window
         self.help_window = tk.Toplevel(self.root)
-        self.help_window.title("Help - Add Job")
+        self.help_window.title("Help - Adicionar Encomenda")
         self.help_window.geometry('600x400')  # Explicitly set the size to 600x400
         self.help_window.resizable(False, False)  # Prevent the window from being resized
         self.help_window.withdraw()  # Hide window until it's fully set up
@@ -173,12 +173,12 @@ class HelpAdd:
 
         # Create a Text widget with the help message
         help_message = """
-        Para adicionar uma nova entrada na tabela com sucesso, a mesma deve ter, pelo menos, os seguintes campos preenchidos:
+        Para adicionar uma nova encomenda na tabela com sucesso, a mesma deve ter, pelo menos, os seguintes campos preenchidos:
             -  Saco
             -  Cliente
-            -  Descrição do trabalho
+            -  Descrição
             -  Quantidade
-            -  Sector em que está
+            -  Sector
         
         Caso queira adicionar um valor de data de entrega, lembre-se de respeitar sempre o formato da mesma!
         """
@@ -207,7 +207,7 @@ class HelpEdit:
     def create_help_window(self):
         # Create a new Toplevel window
         self.help_window = tk.Toplevel(self.root)
-        self.help_window.title("Help - Edit Job")
+        self.help_window.title("Help - Editar Encomenda")
         self.help_window.geometry('600x400')  # Explicitly set the size to 600x400
         self.help_window.resizable(False, False)  # Prevent the window from being resized
         self.help_window.withdraw()  # Hide window until it's fully set up
@@ -231,9 +231,9 @@ class HelpEdit:
         Para editar uma entrada na tabela com sucesso, a mesma deve ter, pelo menos, os seguintes campos preenchidos:
             -  Saco
             -  Cliente
-            -  Descrição do trabalho
+            -  Descrição
             -  Quantidade
-            -  Sector em que está
+            -  Sector
         
         Caso queira adicionar/editar um valor de data de entrega, lembre-se de respeitar sempre o formato da mesma!
         """
