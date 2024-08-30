@@ -394,15 +394,11 @@ class JobDisplayApp:
                     messagebox.showinfo('Success', 'Data restored successfully')
                     
                     # Set up Treeview columns
+
                     self.tree['columns'] = COLUMN_NAMES
                     for col in self.tree['columns']:
-                        if col == CONST_SECTOR:
-                            # Change the column name in treeview from 'SECTOR EM QUE ESTÁ' to 'SECTOR' for consistency
-                            self.tree.heading(col, text='SECTOR')
-                            self.tree.column(col, anchor="w")
-                        else:
-                            self.tree.heading(col, text=col)
-                            self.tree.column(col, anchor="w")
+                        self.tree.heading(col, text=col)
+                        self.tree.column(col, anchor="w")
 
                     self.refresh_view()
                     self.root.focus_force()
@@ -615,18 +611,6 @@ class JobDisplayApp:
 
     def load_jobs(self):
         try:
-            self.tree['columns'] = ('job_id', 'client', 'description', 'quantity', 'sector', 'state', 'urgency', 'delivery')
-            self.tree.heading('job_id', text=CONST_SACO)
-            self.tree.heading('client', text=CONST_CLIENTE)
-            self.tree.heading('description', text=CONST_DESC)
-            self.tree.heading('quantity', text=CONST_QUANT)
-            self.tree.heading('sector', text=CONST_SECTOR)
-            self.tree.heading('state', text=CONST_ESTADO)
-            self.tree.heading('urgency', text=CONST_URG)
-            self.tree.heading('delivery', text=CONST_DATA_ENTR)
-
-            self.tree.pack_forget()
-
             # Load the Excel file
             df = pd.read_excel(self.file_path, skiprows=4)
             df.drop(df.columns[0], axis=1, inplace=True)
@@ -667,7 +651,10 @@ class JobDisplayApp:
 
             messagebox.showinfo('Success', 'Data imported from excel file successfully')
 
-            self.tree.pack(fill=tk.BOTH, expand=True)
+            self.tree['columns'] = COLUMN_NAMES
+            for col in self.tree['columns']:
+                self.tree.heading(col, text=col)
+                self.tree.column(col, anchor="w")
 
             self.refresh_view()
 
