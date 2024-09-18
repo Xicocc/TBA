@@ -673,7 +673,7 @@ class JobDisplayApp:
             messagebox.showerror("Erro valor", f"Value error occurred: {value_error}")
             self.root.focus_force()
         except Exception as e:
-            messagebox.showerror("Error", f"Erro valor. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {value_error}")
+            messagebox.showerror("Error", f"Erro valor. (Este erro é, provavelmente, do sistema, não é culpa sua, por favor tente fechar e voltar a abrir a aplicação) : {e}")
             self.root.focus_force()
 
     def filter_by_date(self, df, query):
