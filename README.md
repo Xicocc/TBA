@@ -111,7 +111,7 @@ When using your own Excel, make sure to match the column structure of the demo f
 
 The app depends on:
 
-- **tkinter** — UI framework (bundled with Python)
+- **Tkinter** — UI framework (bundled with Python)
 
 - **pandas** — Excel/CSV parsing and data handling
 
@@ -191,7 +191,7 @@ TBA/
 
 - Buttons may appear invisible when data is first loaded on macOS (refreshes after any user action)
 
-- Some small parts of the app are in different languages (Ex.: The Add Job window displays in English while the Edit Eob window displays in Portuguese)
+- Some small parts of the app are in different languages (Ex.: The Add Job window displays in English while the Edit Job window displays in Portuguese)
 
 
 ## 📜 License
