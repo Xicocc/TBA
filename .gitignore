@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+
+# Build artifacts
+build/
+dist/
+*.spec
+
+# macOS system junk
+.DS_Store
+
+# IDE/project configs
+.vscode/
+.idea/
