@@ -1,0 +1,383 @@
+{
+    "data": {
+        "jobs_df": [
+            {
+                "SACO": 20241296.0,
+                "CLIENTE": "Demo Client 1",
+                "DESCRI\u00c7\u00c3O": "Obra de Livro",
+                "QUANT.": 150,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "31/12/2024_11:00"
+            },
+            {
+                "SACO": 20241129.0,
+                "CLIENTE": "Demo Client 2",
+                "DESCRI\u00c7\u00c3O": "Blocos de Notas",
+                "QUANT.": 2000,
+                "SECTOR": "Aparar + Acabamento",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "MUITO URGENTE",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241344.0,
+                "CLIENTE": "Demo Client 3",
+                "DESCRI\u00c7\u00c3O": "Obra de Livro",
+                "QUANT.": 200,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20240391.0,
+                "CLIENTE": "Demo Client 4",
+                "DESCRI\u00c7\u00c3O": "Obra de Livro \"7 Olhares Sobre Viseu\"",
+                "QUANT.": 200,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "ALTER.",
+                "URG\u00caNCIA / OBS.": "PRODU\u00c7\u00c3O NA ARTIPOL",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241316.0,
+                "CLIENTE": "Demo Client 5",
+                "DESCRI\u00c7\u00c3O": "Livros Notas de Servi\u00e7o",
+                "QUANT.": 12,
+                "SECTOR": "Numerar",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241364.0,
+                "CLIENTE": "Demo Client 6",
+                "DESCRI\u00c7\u00c3O": "Livros Requisi\u00e7\u00e3o Interna",
+                "QUANT.": 40,
+                "SECTOR": "Imp. Offset GTO",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241349.0,
+                "CLIENTE": "Demo Client 7",
+                "DESCRI\u00c7\u00c3O": "Obra de Livro",
+                "QUANT.": 40,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241318.0,
+                "CLIENTE": "Demo Client 8",
+                "DESCRI\u00c7\u00c3O": "Cart\u00f5es /Etiquetas",
+                "QUANT.": 100000,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "MUITO URGENTE",
+                "DATA ENTREGA": "30/10/2024_14:35"
+            },
+            {
+                "SACO": 20241354.0,
+                "CLIENTE": "Demo Client 9",
+                "DESCRI\u00c7\u00c3O": "Folhetos A5",
+                "QUANT.": 5000,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241170.0,
+                "CLIENTE": "Demo Client 10",
+                "DESCRI\u00c7\u00c3O": "Livros de Guias de Remessa",
+                "QUANT.": 20,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "PROVA NO CLIENTE",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20240942.0,
+                "CLIENTE": "Demo Client 11",
+                "DESCRI\u00c7\u00c3O": "Obra de Livro",
+                "QUANT.": 150,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "MUITO URGENTE",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20240980.0,
+                "CLIENTE": "Demo Client 12",
+                "DESCRI\u00c7\u00c3O": "Obra de Livro",
+                "QUANT.": 1000,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241050.0,
+                "CLIENTE": "Demo Client 13",
+                "DESCRI\u00c7\u00c3O": "Cart\u00f5es de Visita",
+                "QUANT.": 500,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "ALTER.",
+                "URG\u00caNCIA / OBS.": "MUITO URGENTE",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20240413.0,
+                "CLIENTE": "Demo Client 14",
+                "DESCRI\u00c7\u00c3O": "Cat\u00e1logo",
+                "QUANT.": 100,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "MUITO URGENTE",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20240583.0,
+                "CLIENTE": "Demo Client 15",
+                "DESCRI\u00c7\u00c3O": "Etiquetas em Vinil (v\u00e1rias)",
+                "QUANT.": 20000,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "PROVAS URGENTES",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241341.0,
+                "CLIENTE": "Demo Client 16",
+                "DESCRI\u00c7\u00c3O": "Livros",
+                "QUANT.": 30,
+                "SECTOR": "Pr\u00e9 Impress\u00e3o",
+                "ESTADO": "ALTER.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241305.0,
+                "CLIENTE": "Demo Client 17",
+                "DESCRI\u00c7\u00c3O": "Livros CMR",
+                "QUANT.": 30,
+                "SECTOR": "Numerar",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241282.0,
+                "CLIENTE": "Demo Client 18",
+                "DESCRI\u00c7\u00c3O": "Sacos C4",
+                "QUANT.": 6000,
+                "SECTOR": "Fecho em F\u00e1brica",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "No Cal\u00e7adas",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20240909.0,
+                "CLIENTE": "Demo Client 19",
+                "DESCRI\u00c7\u00c3O": "Placas de Acr\u00edlico",
+                "QUANT.": 2,
+                "SECTOR": "Imp. Plotter",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "MUITO URGENTE",
+                "DATA ENTREGA": "30/09/2024_11:30"
+            },
+            {
+                "SACO": 20241370.0,
+                "CLIENTE": "Demo Client 20",
+                "DESCRI\u00c7\u00c3O": "Envelopes C4",
+                "QUANT.": 3000,
+                "SECTOR": "Imp Offset",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241405.0,
+                "CLIENTE": "Demo Client 21",
+                "DESCRI\u00c7\u00c3O": "Livros Av. Pagamento",
+                "QUANT.": 100,
+                "SECTOR": "Imp Offset",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241384.0,
+                "CLIENTE": "Demo Client 22",
+                "DESCRI\u00c7\u00c3O": "Envelolpes ",
+                "QUANT.": 1000,
+                "SECTOR": "Imp Offset",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241393.0,
+                "CLIENTE": "Demo Client 23",
+                "DESCRI\u00c7\u00c3O": "Etiquetas em ",
+                "QUANT.": 950,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241359.0,
+                "CLIENTE": "Demo Client 24",
+                "DESCRI\u00c7\u00c3O": "Capas",
+                "QUANT.": 1000,
+                "SECTOR": "acabamento",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "28/10/2024_11:30"
+            },
+            {
+                "SACO": 20241389.0,
+                "CLIENTE": "Demo Client 25",
+                "DESCRI\u00c7\u00c3O": "Livro",
+                "QUANT.": 80,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241404.0,
+                "CLIENTE": "Demo Client 26",
+                "DESCRI\u00c7\u00c3O": "Livro Revista",
+                "QUANT.": 50,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241392.0,
+                "CLIENTE": "Demo Client 27",
+                "DESCRI\u00c7\u00c3O": "Brochura ",
+                "QUANT.": 500,
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241394.0,
+                "CLIENTE": "Demo Client 28",
+                "DESCRI\u00c7\u00c3O": "Senhas ",
+                "QUANT.": "v\u00e1rias",
+                "SECTOR": "Imp. Digital",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241399.0,
+                "CLIENTE": "Demo Client 29",
+                "DESCRI\u00c7\u00c3O": "Folhas",
+                "QUANT.": 20000,
+                "SECTOR": "Imp Offset",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241391.0,
+                "CLIENTE": "Demo Client 30",
+                "DESCRI\u00c7\u00c3O": "Desdobravel",
+                "QUANT.": "1000+1000",
+                "SECTOR": "Imp Offset",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241381.0,
+                "CLIENTE": "Demo Client 31",
+                "DESCRI\u00c7\u00c3O": "Livros",
+                "QUANT.": 12,
+                "SECTOR": "Talao",
+                "ESTADO": "REPET.",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241385.0,
+                "CLIENTE": "Demo Client 32",
+                "DESCRI\u00c7\u00c3O": "boletim",
+                "QUANT.": 18000,
+                "SECTOR": "-",
+                "ESTADO": "UNKNOWN",
+                "URG\u00caNCIA / OBS.": "lidergrafe",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241318.0,
+                "CLIENTE": "Demo Client 33",
+                "DESCRI\u00c7\u00c3O": "Cart\u00f5es /Etiquetas",
+                "QUANT.": 100000,
+                "SECTOR": "Imp Offset",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            },
+            {
+                "SACO": 20241341.0,
+                "CLIENTE": "Demo Client 34",
+                "DESCRI\u00c7\u00c3O": "Livros",
+                "QUANT.": 30,
+                "SECTOR": "Imp Offset",
+                "ESTADO": "NOVO",
+                "URG\u00caNCIA / OBS.": "-",
+                "DATA ENTREGA": "-"
+            }
+        ],
+        "added_jobs_df": [],
+        "tree_index_map": {
+            "I001": 18,
+            "I002": 23,
+            "I003": 7,
+            "I004": 0,
+            "I005": 1,
+            "I006": 2,
+            "I007": 3,
+            "I008": 4,
+            "I009": 5,
+            "I00A": 6,
+            "I00B": 8,
+            "I00C": 9,
+            "I00D": 10,
+            "I00E": 11,
+            "I00F": 12,
+            "I010": 13,
+            "I011": 14,
+            "I012": 15,
+            "I013": 16,
+            "I014": 17,
+            "I015": 19,
+            "I016": 20,
+            "I017": 21,
+            "I018": 22,
+            "I019": 24,
+            "I01A": 25,
+            "I01B": 26,
+            "I01C": 27,
+            "I01D": 28,
+            "I01E": 29,
+            "I01F": 30,
+            "I020": 31,
+            "I021": 32,
+            "I022": 33
+        }
+    }
+}
