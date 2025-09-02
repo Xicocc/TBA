@@ -1,20 +1,19 @@
 # 🗂️ TBA — Workflow & Order Management App
 
-A desktop application developed for **Tipografia Beira Alta, Lda** to **digitize order/workflow tracking** and reduce paper dependency.  
+A desktop application developed for **Tipografia Beira Alta, Lda** to **digitize order/workflow tracking**, reduce paper dependency and display the most important orders.  
 Built with **Python**, **Tkinter** (UI), and **pandas** for data handling.  
 
 This repo includes **synthetic demo data** in [`DemoData/`](DemoData) so you can try the app safely. 
 
 The repo also includes demo screenshots of the app running. You can find these in the [`Screenshots`](#Screenshots) section of this README, and in the [`Screenshots/`](Screenshots) folder.
 
-No company information is included.
-
 ---
 
 ## ✨ Features
 
 - 📋 **Order management** with a Tkinter-based UI  
-- 🔎 **Add**, **edit**, **delete**, and **mark** jobs as important  
+- 🔎 **Add**, **edit**, **delete**, and **mark** jobs as important
+- 📺 **Display** of the most important orders to complete, ordered by due date
 - 💾 **State saving** to JSON (resume where you left off)  
 - 📊 **Excel-based data import** (must respect predefined structure), with the **option to import from an existing JSON** state file  
 - 🖨️ **Export to PDF** with neat, coherent formatting (via ReportLab)  
@@ -79,7 +78,7 @@ pip install -r requirements.txt
 python3 current/main.py
 ```
 
-##### Windows (PowerShell)
+##### Windows (PowerShell/Terminal)
 ```bash
 python current/main.py
 ```
@@ -88,13 +87,13 @@ python current/main.py
 
 The folder [`DemoData/`](DemoData) contains synthetic examples for testing:
 
-- Excel sheet — structured input required for the app to work.
+- **Excel sheet** — structured input required for the app to work (JSON file can also be used as input)
 
-- JSON file — app state file (saved when closing, if user chooses).
+- **JSON file** — app state file (saved when closing, if user chooses)
 
-- PDF file — exported directly from the app, ready to print/distribute.
+- **PDF file** — exported directly from the app, ready to print/distribute
 
-When using your own Excel, make sure to match the column structure of the demo file.
+When using your own Excel, make sure to match the column structure of the demo file
 
 <a id="Screenshots"></a>
 ## 📸 Screenshots
@@ -104,7 +103,7 @@ When using your own Excel, make sure to match the column structure of the demo f
 | <img src="Screenshots/Home_Screen.png" width="400"/> | <img src="Screenshots/Main_Screen.png" width="400"/> |
 | **Add job window** | **Edit job window** |
 | <img src="Screenshots/Add_Screen.png" width="400"/> | <img src="Screenshots/Edit_Screen.png" width="400"/> |
-| **Important jobs window** | **Pdf export** |
+| **Important jobs window** | **PDF export** |
 | <img src="Screenshots/Important_Orders_Screen.png" width="400"/> | <img src="Screenshots/PDF_Screen.png" width="400"/> |
 
 <a id="dependencies"></a>
@@ -140,7 +139,7 @@ The app depends on:
 
     - important_jobs_view.py
 
-Dependencies are listed in [`requirements.txt`](requirements.txt)
+Dependencies are also listed in [`requirements.txt`](requirements.txt)
 
 ## 📂 Project Structure
 ```bash
@@ -181,7 +180,7 @@ TBA/
 
 - All data in this repository is synthetic and safe to share
 
-- No company information is included
+- No company (**Tipografia Beira Alta, Lda **) information is included
 
 - Excel structure must be respected for the app to run correctly
 
@@ -191,6 +190,8 @@ TBA/
 - Designed primarily for Windows at 1080p resolution
 
 - Buttons may appear invisible when data is first loaded on macOS (refreshes after any user action)
+
+- Some small parts of the app are in different languages (Ex.: The Add Job window displays in English while the Edit Eob window displays in Portuguese)
 
 
 ## 📜 License
