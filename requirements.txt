@@ -1,0 +1,7 @@
+# Core dependencies
+pandas
+screeninfo
+reportlab
+
+# Tkinter is part of the Python standard library, no need to install
+# json, datetime, logging, locale, os, sys are all stdlib as well

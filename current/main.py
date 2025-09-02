@@ -313,7 +313,7 @@ class JobDisplayApp:
                 draw_logo()  # Draw logo on each page
                 pdf_canvas.setFont("Helvetica-Bold", 14)
                 pdf_canvas.setFillColor(title_color)  # Set title color on subsequent pages
-                pdf_canvas.drawString(0.5 * inch, page_height - 0.75 * inch, f"Relatório de Vagas - {today_date}")  # Draw title on subsequent pages
+                pdf_canvas.drawString(0.5 * inch, page_height - 0.75 * inch, f"Relatório de encomendas - {today_date}")  # Draw title on subsequent pages
                 rows_drawn = draw_table(wrapped_data, current_row, include_header=True)
                 current_row += rows_drawn
 
