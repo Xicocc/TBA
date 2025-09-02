@@ -5,7 +5,7 @@ Built with **Python**, **Tkinter** (UI), and **pandas** for data handling.
 
 This repo includes **synthetic demo data** in [`DemoData/`](DemoData) so you can try the app safely. 
 
-The repo also includes demo screenshots of the app running. You can find these in the [`Screenshots`](#screenshots) section of this README, and in the [`Screenshots/`](Screenshots) folder.
+The repo also includes demo screenshots of the app running. You can find these in the [`Screenshots`](#Screenshots) section of this README, and in the [`Screenshots/`](Screenshots) folder.
 
 No company information is included.
 
@@ -96,14 +96,16 @@ The folder [`DemoData/`](DemoData) contains synthetic examples for testing:
 
 When using your own Excel, make sure to match the column structure of the demo file.
 
-<a id="screenshots"></a>
+<a id="Screenshots"></a>
 ## 📸 Screenshots
 
-**Home window** &nbsp;&nbsp;&nbsp; **Main window**  
-<img src="Screenshots/Home_Screen.png" alt="Main window" width="350
-"/>
-<img src="Screenshots/Main_Screen.png" alt="Add Job form" width="350
-"/>
+| **Home window** | **Main window** |
+|:---------------:|:---------------:|
+| <img src="Screenshots/Home_Screen.png" width="400"/> | <img src="Screenshots/Main_Screen.png" width="400"/> |
+| **Add job window** | **Edit job window** |
+| <img src="Screenshots/Add_Screen.png" width="400"/> | <img src="Screenshots/Edit_Screen.png" width="400"/> |
+| **Important jobs window** | **Pdf export** |
+| <img src="Screenshots/Important_Orders_Screen.png" width="400"/> | <img src="Screenshots/PDF_Screen.png" width="400"/> |
 
 <a id="dependencies"></a>
 ## ⚙️ Dependencies
