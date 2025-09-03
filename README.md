@@ -121,22 +121,15 @@ The app depends on:
 
 - **Standard library**: json, datetime, logging, locale, os, sys
 
-- **Local modules** (inside current/):
+- **Local modules** (inside [`Current/`](Current)):
 
     - constants.py
-
     - date_placeholder.py
-
     - help_window.py
-
     - json_operations.py
-
     - add_job_form.py
-
     - edit_job_form.py
-
     - delete_job_form.py
-
     - important_jobs_view.py
 
 Dependencies are also listed in [`requirements.txt`](requirements.txt)
