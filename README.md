@@ -180,7 +180,7 @@ TBA/
 
 - All data in this repository is synthetic and safe to share
 
-- No company (**Tipografia Beira Alta, Lda **) information is included
+- No company (**Tipografia Beira Alta, Lda**) information is included
 
 - Excel structure must be respected for the app to run correctly
 
