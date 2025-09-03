@@ -5,7 +5,9 @@ Built with **Python**, **Tkinter** (UI), and **pandas** for data handling.
 
 This repo includes **synthetic demo data** in [`DemoData/`](DemoData) so you can try the app safely. 
 
-The repo also includes demo screenshots of the app running. You can find these in the [`Screenshots`](#Screenshots) section of this README, and in the [`Screenshots/`](Screenshots) folder.
+The repo also includes demo screenshots of the app running. You can find these in the [`Screenshots`](#screenshots) section of this README, and in the [`Screenshots/`](Screenshots) folder.
+
+Note the app is **mostly** in Portuguese (see [`Known Issues`](#known-issues)) as it was built for a Portuguese company.
 
 ---
 
@@ -95,7 +97,7 @@ The folder [`DemoData/`](DemoData) contains synthetic examples for testing:
 
 When using your own Excel, make sure to match the column structure of the demo file
 
-<a id="Screenshots"></a>
+<a id="screenshots"></a>
 ## 📸 Screenshots
 
 | **Home window** | **Main window** |
@@ -121,7 +123,7 @@ The app depends on:
 
 - **Standard library**: json, datetime, logging, locale, os, sys
 
-- **Local modules** (inside [`Current/`](Current)):
+- **Local modules** (inside [`current/`](current)):
 
     - constants.py
     - date_placeholder.py
@@ -150,7 +152,7 @@ TBA/
 │  ├─ logo_tba.png            # the logo of the company this app was developed for
 │  └─ notebook-line-icon.ico  # an icon to build the app with
 ├─ DemoData/
-├─ screenshots/
+├─ Screenshots/
 ├─ requirements.txt
 ├─ .gitattributes
 ├─ .gitignore
@@ -177,6 +179,7 @@ TBA/
 
 - Excel structure must be respected for the app to run correctly
 
+<a id="known-issues"></a>
 ## ⚠️ Known Issues
 - Some scaling issues on macOS Retina (2560x1600)
 
@@ -184,7 +187,7 @@ TBA/
 
 - Buttons may appear invisible when data is first loaded on macOS (refreshes after any user action)
 
-- Some small parts of the app are in different languages (Ex.: The Add Job window displays in English while the Edit Job window displays in Portuguese)
+- Some small parts of the app, like window names and warnings, are in a different language (English instead of Portuguese)
 
 
 ## 📜 License
